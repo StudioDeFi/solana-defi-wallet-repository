@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'standalone',
   
   // Production optimizations
   compress: true,
@@ -111,13 +110,7 @@ const nextConfig = {
       };
     }
 
-    // Externalize heavy dependencies - load from CDN
-    config.externals = config.externals || {};
-    if (!isServer) {
-      config.externals['three'] = 'THREE';
-      config.externals['@react-three/fiber'] = 'ReactThreeFiber';
-      config.externals['@react-three/drei'] = 'ReactThreeDrei';
-    }
+    // Note: Three.js externals removed - using CSS-only version
 
     return config;
   },
