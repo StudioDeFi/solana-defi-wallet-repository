@@ -1,3 +1,7 @@
+![Auto Assign](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/auto-assign.yml/badge.svg)
+![Proof HTML](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/proof-html.yml/badge.svg)
+![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)
+
 # Solana Wallet - Advanced Multi-Platform Wallet
 
 A comprehensive Solana wallet application with advanced features, MEV protection, and multi-platform support (Web, Mobile APK, iOS, Windows).
