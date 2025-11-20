@@ -1,8 +1,27 @@
 {
   "name": "solana-wallet-advanced",
   "version": "1.0.0",
-  "description": "Lightweight Solana Wallet - UI Testing Only",
-  "private": true,
+  "description": "Advanced Solana Wallet with MEV Protection - Production-ready multi-platform DeFi wallet with modern UI, comprehensive API integration, and enterprise-grade security",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudioDeFi/solana-defi-wallet-repository.git"
+  },
+  "keywords": [
+    "solana",
+    "wallet",
+    "defi",
+    "crypto",
+    "blockchain",
+    "mev-protection",
+    "swap",
+    "trading",
+    "nextjs",
+    "typescript",
+    "web3"
+  ],
+  "author": "StudioDeFi",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
