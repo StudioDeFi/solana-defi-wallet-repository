@@ -29,7 +29,9 @@
     "start": "next start",
     "clean": "rm -rf .next node_modules",
     "install:light": "npm install --no-optional --legacy-peer-deps --prefer-offline",
-    "postinstall": "npx prisma generate || echo 'Prisma generate skipped'"
+    "postinstall": "npx prisma generate || echo 'Prisma generate skipped'",
+    "vercel-build": "prisma generate && next build",
+    "prebuild": "prisma generate || echo 'Prisma generate skipped'"
   },
   "dependencies": {
     "next": "^14.0.4",
