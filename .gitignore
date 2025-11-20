@@ -1,7 +1,15 @@
 # Dependencies
 node_modules/
+**/node_modules/
 /.pnp
 .pnp.js
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
 
 # Testing
 /coverage
