@@ -9,8 +9,7 @@
     "build:light": "NODE_ENV=production next build",
     "start": "next start",
     "clean": "rm -rf .next node_modules",
-    "install:light": "npm install --no-optional --legacy-peer-deps --prefer-offline",
-    "postinstall": "prisma generate || true"
+    "install:light": "npm install --no-optional --legacy-peer-deps --prefer-offline"
   },
   "dependencies": {
     "next": "^14.0.4",

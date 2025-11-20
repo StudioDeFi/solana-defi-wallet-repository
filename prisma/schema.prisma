@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  walletAddress String   @unique
+  email         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  limitOrders   LimitOrder[]
+  dcaOrders     DCAOrder[]
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model LimitOrder {
+  id          String   @id @default(cuid())
+  userId      String
+  tokenIn     String
+  tokenOut    String
+  amountIn    String
+  price       Float
+  orderType   String   // 'buy' | 'sell'
+  status      String   @default("pending") // 'pending' | 'filled' | 'cancelled' | 'expired'
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime?
+  filledAt    DateTime?
+  txHash      String?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model DCAOrder {
+  id              String   @id @default(cuid())
+  userId          String
+  tokenIn         String
+  tokenOut        String
+  amountPerInterval String
+  interval        String   // 'hourly' | 'daily' | 'weekly'
+  totalAmount     String
+  executedAmount  String   @default("0")
+  nextExecution   DateTime
+  status          String   @default("active") // 'active' | 'paused' | 'completed' | 'cancelled'
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([status])
+  @@index([nextExecution])
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // hashed
+  role      String   @default("admin") // 'admin' | 'super_admin'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([email])
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  userId      String?
+  rateLimit   Int      @default(1000)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime?
+  active      Boolean  @default(true)
+  
+  @@index([key])
+  @@index([userId])
+}
+
