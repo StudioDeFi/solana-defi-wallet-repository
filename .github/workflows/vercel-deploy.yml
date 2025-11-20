@@ -1,0 +1,41 @@
+name: Vercel Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Generate Prisma Client
+        run: npx prisma generate || echo "Prisma generate skipped"
+
+      - name: Build project
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Verify build
+        run: |
+          if [ -d ".next" ]; then
+            echo "✅ Build successful - .next directory exists"
+          else
+            echo "❌ Build failed - .next directory not found"
+            exit 1
+          fi
+
