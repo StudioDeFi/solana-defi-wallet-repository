@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { useThemeStore } from '@/store/theme-store';
@@ -11,14 +11,18 @@ interface GlowCardProps {
   glowColor?: string;
   intensity?: 'low' | 'medium' | 'high';
   hover?: boolean;
+  'aria-label'?: string;
+  role?: string;
 }
 
-export const GlowCard: React.FC<GlowCardProps> = ({
+export const GlowCard: React.FC<GlowCardProps> = memo(({
   children,
   className,
   glowColor,
   intensity = 'medium',
   hover = true,
+  'aria-label': ariaLabel,
+  role,
 }) => {
   const { colors } = useThemeStore();
   const color = glowColor || colors?.glow || '#0ea5e9';
@@ -50,16 +54,22 @@ export const GlowCard: React.FC<GlowCardProps> = ({
         boxShadow: `${intensityMap[intensity]} ${color}, 0 0 80px ${color}40`,
       } : undefined}
       transition={{ duration: 0.3 }}
+      aria-label={ariaLabel}
+      role={role}
     >
-      <div className="absolute inset-0 rounded-xl opacity-20 blur-xl"
+      <div 
+        className="absolute inset-0 rounded-xl opacity-20 blur-xl pointer-events-none"
         style={{
           background: `radial-gradient(circle at center, ${color} 0%, transparent 70%)`,
         }}
+        aria-hidden="true"
       />
       <div className="relative z-10">
         {children}
       </div>
     </motion.div>
   );
-};
+});
+
+GlowCard.displayName = 'GlowCard';
 
