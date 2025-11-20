@@ -1,5 +1,9 @@
 # Vercel Setup & Repository Migration Guide
 
+## Vercel Project Information
+- **Project ID**: `prj_0jZfdorrk1hX9QvTbHOKAgSsrGWk`
+- **Project URL**: `solana-defi-wallet-repository-git-main-tradeos.vercel.app`
+
 ## ⚠️ Critical: Update Vercel Repository Connection
 
 Your Vercel project is currently connected to the **old repository**:

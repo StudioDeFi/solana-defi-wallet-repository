@@ -198,6 +198,7 @@ git push origin main
 
 **Next Steps**:
 1. ⚠️ **IMPORTANT**: Update Vercel Project Repository Connection
+   - **Project ID**: `prj_0jZfdorrk1hX9QvTbHOKAgSsrGWk`
    - Go to Vercel Dashboard → Project Settings → Git
    - Disconnect the old repository: `SMSDAO/solana-defi-wallet`
    - Connect the new repository: `StudioDeFi/solana-defi-wallet-repository`
