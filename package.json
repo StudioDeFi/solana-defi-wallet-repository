@@ -29,7 +29,7 @@
     "start": "next start",
     "clean": "rm -rf .next node_modules",
     "install:light": "npm install --no-optional --legacy-peer-deps --prefer-offline",
-    "postinstall": "prisma generate || true"
+    "postinstall": "npx prisma generate || echo 'Prisma generate skipped'"
   },
   "dependencies": {
     "next": "^14.0.4",
@@ -47,16 +47,18 @@
     "lucide-react": "^0.303.0",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.2.0",
-    "react-hot-toast": "^2.4.1"
+    "react-hot-toast": "^2.4.1",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.33",
+    "autoprefixer": "^10.4.16",
+    "@prisma/client": "^5.0.0",
+    "prisma": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
-    "typescript": "^5.3.3",
-    "tailwindcss": "^3.4.0",
-    "postcss": "^8.4.33",
-    "autoprefixer": "^10.4.16"
+    "typescript": "^5.3.3"
   },
   "optionalDependencies": {},
   "bundleDependencies": false
