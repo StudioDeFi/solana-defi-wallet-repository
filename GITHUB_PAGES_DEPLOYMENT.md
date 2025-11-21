@@ -38,7 +38,7 @@ The repository includes a GitHub Actions workflow (`.github/workflows/github-pag
    - Push to `main` branch triggers deployment
    - Check "Actions" tab for deployment status
    - Once complete, site will be available at:
-     `https://studioDefi.github.io/solana-defi-wallet-repository/`
+     `https://studiodefi.github.io/solana-defi-wallet-repository/`
 
 ### Custom Domain (Optional)
 
@@ -50,7 +50,7 @@ To use a custom domain:
    - Click "Save"
 
 2. **Configure DNS**
-   - Add CNAME record pointing to: `studioDefi.github.io`
+   - Add CNAME record pointing to: `studiodefi.github.io`
    - Or A records pointing to GitHub Pages IPs:
      ```
      185.199.108.153
@@ -182,7 +182,7 @@ gh run list --workflow=github-pages.yml
 
 Check deployment status:
 - Badge: ![GitHub Pages](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml/badge.svg)
-- URL: https://studioDefi.github.io/solana-defi-wallet-repository/
+- URL: https://studiodefi.github.io/solana-defi-wallet-repository/
 
 ## Troubleshooting
 
@@ -308,5 +308,5 @@ Live at GitHub Pages URL
 
 ---
 
-**Last Updated**: 2025-01-21  
-**GitHub Pages URL**: https://studioDefi.github.io/solana-defi-wallet-repository/
+**Last Updated**: 2025-11-21  
+**GitHub Pages URL**: https://studiodefi.github.io/solana-defi-wallet-repository/

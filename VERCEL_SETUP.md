@@ -53,6 +53,7 @@ NODE_ENV=production
 SKIP_ENV_VALIDATION=true
 DATABASE_URL=your-database-connection-string
 NEXT_PUBLIC_SOLANA_RPC_MAINNET=https://api.mainnet-beta.solana.com
+# Generate with: openssl rand -base64 32
 JWT_SECRET=your-secure-random-secret-32-chars-minimum
 NEXT_PUBLIC_APP_URL=https://your-deployment-url.vercel.app
 ```

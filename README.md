@@ -224,7 +224,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 This repository is configured for automatic deployment to both **GitHub Pages** and **Vercel** on every push to the `main` branch.
 
 ### GitHub Pages (Static Export)
-- **URL**: https://studioDefi.github.io/solana-defi-wallet-repository/
+- **URL**: https://studiodefi.github.io/solana-defi-wallet-repository/
 - **Status**: ![GitHub Pages](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml/badge.svg)
 - **Features**: Static hosting, client-side functionality
 - **Setup**: [GITHUB_PAGES_SETUP.md](./GITHUB_PAGES_SETUP.md) - Quick setup guide

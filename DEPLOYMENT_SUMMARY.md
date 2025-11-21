@@ -8,7 +8,7 @@ This repository is configured for **automatic deployment** on every push to the 
 
 ### 1. GitHub Pages (Static Export)
 - **Status**: ![GitHub Pages](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml/badge.svg)
-- **URL**: https://studioDefi.github.io/solana-defi-wallet-repository/
+- **URL**: https://studiodefi.github.io/solana-defi-wallet-repository/
 - **Type**: Static site (client-side only)
 - **Workflow**: `.github/workflows/github-pages.yml`
 - **Documentation**: [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md)
@@ -110,6 +110,8 @@ NODE_ENV=production
 SKIP_ENV_VALIDATION=true
 DATABASE_URL=your-database-connection-string
 NEXT_PUBLIC_SOLANA_RPC_MAINNET=https://api.mainnet-beta.solana.com
+# Replace with a secure random string of at least 32 characters
+# Generate with: openssl rand -base64 32
 JWT_SECRET=your-secure-random-secret-32-chars-minimum
 NEXT_PUBLIC_APP_URL=https://your-deployment-url.vercel.app
 ```
@@ -161,7 +163,7 @@ JUPITER_API_KEY=your-jupiter-api-key
 
 ### View Live Deployments
 
-- **GitHub Pages**: https://studioDefi.github.io/solana-defi-wallet-repository/
+- **GitHub Pages**: https://studiodefi.github.io/solana-defi-wallet-repository/
 - **Vercel**: Check Vercel Dashboard for URL
 
 ## Troubleshooting
@@ -192,6 +194,6 @@ JUPITER_API_KEY=your-jupiter-api-key
 
 ---
 
-**Last Updated**: 2025-01-21  
+**Last Updated**: 2025-11-21  
 **Repository**: StudioDeFi/solana-defi-wallet-repository  
 **Version**: 1.0.0

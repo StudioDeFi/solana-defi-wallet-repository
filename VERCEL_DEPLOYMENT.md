@@ -80,6 +80,8 @@ Connect your GitHub repository directly to Vercel for automatic deployments:
    NEXT_PUBLIC_SOLANA_RPC_MAINNET=https://api.mainnet-beta.solana.com
    
    # Authentication
+   # Replace with a secure random string of at least 32 characters
+   # Generate with: openssl rand -base64 32
    JWT_SECRET=your-secure-random-secret-32-chars-minimum
    
    # App Configuration
@@ -277,5 +279,5 @@ Current deployment status can be monitored via:
 
 ---
 
-**Last Updated**: 2025-01-21  
+**Last Updated**: 2025-11-21  
 **Vercel Project ID**: `prj_0jZfdorrk1hX9QvTbHOKAgSsrGWk`

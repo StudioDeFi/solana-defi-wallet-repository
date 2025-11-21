@@ -50,7 +50,7 @@ Deployment typically takes 2-5 minutes.
 
 Once deployed, your site will be available at:
 
-**https://studioDefi.github.io/solana-defi-wallet-repository/**
+**https://studiodefi.github.io/solana-defi-wallet-repository/**
 
 Or check the deployment URL in:
 - Actions → Latest workflow run → Deploy step → View deployment
@@ -65,7 +65,7 @@ Or check the deployment URL in:
 
 ### Test Your Site
 
-1. Visit: https://studioDefi.github.io/solana-defi-wallet-repository/
+1. Visit: https://studiodefi.github.io/solana-defi-wallet-repository/
 2. Verify the site loads correctly
 3. Test navigation and client-side features
 
@@ -88,7 +88,7 @@ Add one of the following to your DNS:
 ```
 Type: CNAME
 Name: wallet (or your subdomain)
-Value: studioDefi.github.io
+Value: studiodefi.github.io
 ```
 
 **Option B: A Records (Apex Domain)**
