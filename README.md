@@ -1,11 +1,9 @@
-
-=======
-![Auto Assign](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/auto-assign.yml/badge.svg)
-![Proof HTML](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/proof-html.yml/badge.svg)
-![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)
->>>>>>> main
-
 # Solana Wallet - Advanced Multi-Platform Wallet
+
+[![GitHub Pages](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml/badge.svg)](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml)
+[![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml)
+[![Proof HTML](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/proof-html.yml/badge.svg)](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/proof-html.yml)
+[![Auto Assign](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/auto-assign.yml/badge.svg)](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/auto-assign.yml)
 
 A comprehensive Solana wallet application with advanced features, MEV protection, and multi-platform support (Web, Mobile APK, iOS, Windows).
 
@@ -221,18 +219,36 @@ This release includes:
 
 See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 
-## 🚀 Quick Deploy to Vercel
+## 🚀 Automated Deployment
+
+This repository is configured for automatic deployment to both **GitHub Pages** and **Vercel** on every push to the `main` branch.
+
+### GitHub Pages (Static Export)
+- **URL**: https://studioDefi.github.io/solana-defi-wallet-repository/
+- **Status**: ![GitHub Pages](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml/badge.svg)
+- **Features**: Static hosting, client-side functionality
+- **Documentation**: [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md)
+
+### Vercel (Full Features)
+- **Project ID**: `prj_0jZfdorrk1hX9QvTbHOKAgSsrGWk`
+- **Status**: ![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)
+- **Features**: Full Next.js with SSR, API routes, and server-side features
+- **Documentation**: [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)
+
+### Quick Deploy to Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/StudioDeFi/solana-defi-wallet-repository)
 
 1. Click the button above or go to [vercel.com](https://vercel.com)
 2. Import this repository: `https://github.com/StudioDeFi/solana-defi-wallet-repository`
-3. Add environment variables (see [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md))
+3. Add environment variables (see [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md))
 4. Deploy!
 
 ## 📚 Documentation
 
-- **[Production Deployment Guide](./PRODUCTION_DEPLOYMENT.md)** - Complete deployment instructions for Vercel and other platforms
+- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Automatic deployment setup and configuration for Vercel
+- **[GitHub Pages Deployment Guide](./GITHUB_PAGES_DEPLOYMENT.md)** - Static export deployment to GitHub Pages
+- **[Production Deployment Guide](./PRODUCTION_DEPLOYMENT.md)** - General deployment instructions for various platforms
 - **[Design System](./DESIGN_SYSTEM.md)** - Component architecture, usage, and wire-up documentation
 - **[Optimization Summary](./OPTIMIZATION_SUMMARY.md)** - All production optimizations applied
 - **[CHANGELOG](./CHANGELOG.md)** - Version history and detailed release notes

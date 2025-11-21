@@ -26,6 +26,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:light": "NODE_ENV=production next build",
+    "build:static": "NEXT_CONFIG_MODE=static next build",
     "start": "next start",
     "clean": "rm -rf .next node_modules",
     "install:light": "npm install --no-optional --legacy-peer-deps --prefer-offline",
