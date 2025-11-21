@@ -227,13 +227,15 @@ This repository is configured for automatic deployment to both **GitHub Pages** 
 - **URL**: https://studioDefi.github.io/solana-defi-wallet-repository/
 - **Status**: ![GitHub Pages](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/github-pages.yml/badge.svg)
 - **Features**: Static hosting, client-side functionality
-- **Documentation**: [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md)
+- **Setup**: [GITHUB_PAGES_SETUP.md](./GITHUB_PAGES_SETUP.md) - Quick setup guide
+- **Documentation**: [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md) - Full documentation
 
 ### Vercel (Full Features)
 - **Project ID**: `prj_0jZfdorrk1hX9QvTbHOKAgSsrGWk`
 - **Status**: ![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)
 - **Features**: Full Next.js with SSR, API routes, and server-side features
-- **Documentation**: [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)
+- **Setup**: [VERCEL_SECRETS_SETUP.md](./VERCEL_SECRETS_SETUP.md) - Configure GitHub secrets
+- **Documentation**: [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) - Full documentation
 
 ### Quick Deploy to Vercel
 
@@ -246,9 +248,15 @@ This repository is configured for automatic deployment to both **GitHub Pages** 
 
 ## 📚 Documentation
 
-- **[Vercel Deployment Guide](./VERCEL_DEPLOYMENT.md)** - Automatic deployment setup and configuration for Vercel
-- **[GitHub Pages Deployment Guide](./GITHUB_PAGES_DEPLOYMENT.md)** - Static export deployment to GitHub Pages
-- **[Production Deployment Guide](./PRODUCTION_DEPLOYMENT.md)** - General deployment instructions for various platforms
+### Deployment Guides
+- **[Deployment Summary](./DEPLOYMENT_SUMMARY.md)** - Quick reference for all deployment options
+- **[GitHub Pages Setup](./GITHUB_PAGES_SETUP.md)** - Enable GitHub Pages in 5 minutes
+- **[GitHub Pages Deployment](./GITHUB_PAGES_DEPLOYMENT.md)** - Complete static deployment guide
+- **[Vercel Secrets Setup](./VERCEL_SECRETS_SETUP.md)** - Configure GitHub Actions secrets for Vercel
+- **[Vercel Deployment](./VERCEL_DEPLOYMENT.md)** - Complete Vercel deployment guide
+- **[Production Deployment](./PRODUCTION_DEPLOYMENT.md)** - General deployment for various platforms
+
+### Project Documentation
 - **[Design System](./DESIGN_SYSTEM.md)** - Component architecture, usage, and wire-up documentation
 - **[Optimization Summary](./OPTIMIZATION_SUMMARY.md)** - All production optimizations applied
 - **[CHANGELOG](./CHANGELOG.md)** - Version history and detailed release notes
