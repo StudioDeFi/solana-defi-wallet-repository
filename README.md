@@ -232,6 +232,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 
 ## 📚 Documentation
 
+- **[GitHub Pages Deployment](./GITHUB_PAGES_DEPLOYMENT.md)** - Deploy static version to GitHub Pages
 - **[Production Deployment Guide](./PRODUCTION_DEPLOYMENT.md)** - Complete deployment instructions for Vercel and other platforms
 - **[Design System](./DESIGN_SYSTEM.md)** - Component architecture, usage, and wire-up documentation
 - **[Optimization Summary](./OPTIMIZATION_SUMMARY.md)** - All production optimizations applied

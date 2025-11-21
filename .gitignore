@@ -22,6 +22,8 @@ lerna-debug.log*
 /build
 /dist
 
+# Note: /docs is intentionally NOT ignored - it contains the GitHub Pages static export
+
 # Misc
 .DS_Store
 *.pem
