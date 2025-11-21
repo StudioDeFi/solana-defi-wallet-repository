@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { WalletProvider } from '@/components/wallet/WalletProvider';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -7,12 +6,9 @@ import { AuraBackground } from '@/components/ui/AuraBackground';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Toaster } from 'react-hot-toast';
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-  variable: '--font-inter',
-});
+// Note: Using Tailwind's default font-sans stack for better compatibility
+// in offline/network-restricted environments (e.g., build servers, GitHub Pages).
+// Provides good fallbacks: system-ui, -apple-system, etc.
 
 export const metadata: Metadata = {
   title: {
@@ -107,7 +103,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} ${inter.variable}`}>
+      <body className="font-sans">
         <ErrorBoundary>
           <WalletProvider>
             <ThemeProvider>
