@@ -77,6 +77,19 @@ const nextConfig = {
   },
 
   webpack: (config, { isServer, dev }) => {
+    // Resolve path aliases
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+      '@/components': require('path').resolve(__dirname, 'src/components'),
+      '@/lib': require('path').resolve(__dirname, 'src/lib'),
+      '@/hooks': require('path').resolve(__dirname, 'src/hooks'),
+      '@/store': require('path').resolve(__dirname, 'src/store'),
+      '@/api': require('path').resolve(__dirname, 'src/api'),
+      '@/types': require('path').resolve(__dirname, 'src/types'),
+      '@/utils': require('path').resolve(__dirname, 'src/utils'),
+    };
+
     // Production optimizations
     if (!dev && !isServer) {
       config.optimization = {
@@ -109,8 +122,6 @@ const nextConfig = {
         tls: false,
       };
     }
-
-    // Note: Three.js externals removed - using CSS-only version
 
     return config;
   },
