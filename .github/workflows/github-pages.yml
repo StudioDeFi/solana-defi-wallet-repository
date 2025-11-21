@@ -29,10 +29,15 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Generate Prisma Client
-        run: npx prisma generate || echo "Prisma generate skipped"
+        run: |
+          if [ -f "prisma/schema.prisma" ]; then
+            npx prisma generate
+          else
+            echo "No Prisma schema found, skipping Prisma client generation"
+          fi
 
       - name: Build with Next.js (Static Export)
         run: npm run build:static
