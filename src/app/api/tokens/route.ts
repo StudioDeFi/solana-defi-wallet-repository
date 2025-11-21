@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100');
     const offset = parseInt(searchParams.get('offset') || '0');
 
+    // Convert null to undefined as getTokensFromRegistry expects string | undefined
     const tokens = await getTokensFromRegistry({
       search: search || undefined,
       verified,

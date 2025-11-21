@@ -6,6 +6,10 @@ import { AuraBackground } from '@/components/ui/AuraBackground';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Toaster } from 'react-hot-toast';
 
+// Note: Using Tailwind's default font-sans stack for better compatibility
+// in offline/network-restricted environments (e.g., build servers, GitHub Pages).
+// Provides good fallbacks: system-ui, -apple-system, etc.
+
 export const metadata: Metadata = {
   title: {
     default: 'Solana Wallet - Advanced Multi-Platform Wallet',

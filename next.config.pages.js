@@ -12,12 +12,23 @@ const nextConfig = {
     unoptimized: true,
   },
   
-  // Set base path for GitHub Pages (will be repository name)
-  // For user/organization pages, leave basePath empty
-  // For project pages, set to repository name: basePath: '/solana-defi-wallet-repository'
+  // Set base path for GitHub Pages deployment
+  // 
+  // For user/organization pages (username.github.io):
+  //   Leave basePath empty (default)
+  //   Site will be at: https://username.github.io/
+  //
+  // For project pages (username.github.io/repository-name):
+  //   Set basePath to your repository name
+  //   Example: basePath: '/solana-defi-wallet-repository'
+  //   Site will be at: https://username.github.io/repository-name/
+  //
+  // Set via environment variable before build:
+  //   export NEXT_PUBLIC_BASE_PATH=/your-repo-name
+  //   npm run build:pages
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   
-  // Asset prefix for GitHub Pages
+  // Asset prefix must match basePath for proper asset loading
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '',
   
   // Trailing slash for better GitHub Pages compatibility
