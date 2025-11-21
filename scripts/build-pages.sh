@@ -46,6 +46,10 @@ if [ $BUILD_EXIT -ne 0 ]; then
   exit $BUILD_EXIT
 fi
 
+# Create .nojekyll file for GitHub Pages
+touch docs/.nojekyll
+echo "✓ Created .nojekyll file"
+
 echo ""
 echo "✅ GitHub Pages build complete! Output in /docs directory"
 echo ""
