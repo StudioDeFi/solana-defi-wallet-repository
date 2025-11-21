@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
+const isStaticExport = process.env.NEXT_CONFIG_MODE === 'static';
+
 const nextConfig = {
+  // Enable static export for GitHub Pages when NEXT_CONFIG_MODE=static
+  ...(isStaticExport && { output: 'export' }),
   reactStrictMode: true,
   swcMinify: true,
   
@@ -10,6 +14,8 @@ const nextConfig = {
   
   // Image optimization
   images: {
+    // Disable optimization for static export (GitHub Pages)
+    unoptimized: isStaticExport,
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
