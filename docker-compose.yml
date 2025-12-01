@@ -3,8 +3,6 @@
 # Production-ready orchestration for all services
 # ============================================
 
-version: '3.8'
-
 services:
   # ==========================================
   # PostgreSQL Database Service
