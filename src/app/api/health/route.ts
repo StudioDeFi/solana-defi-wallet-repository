@@ -30,6 +30,9 @@ interface CheckResult {
 // Track server start time for uptime calculation
 const startTime = Date.now();
 
+// Version from package.json (fallback if env not set)
+const APP_VERSION = '1.0.0';
+
 /**
  * Check database connectivity
  */
@@ -99,7 +102,7 @@ export async function GET() {
     status: overallStatus,
     timestamp,
     uptime,
-    version: process.env.npm_package_version || '1.0.0',
+    version: process.env.APP_VERSION || APP_VERSION,
     environment: process.env.NODE_ENV || 'development',
     checks: {
       app: appCheck,

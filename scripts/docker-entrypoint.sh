@@ -34,7 +34,7 @@ wait_for_db() {
     RETRY_COUNT=0
     
     while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-        if npx prisma db execute --stdin <<< "SELECT 1" 2>/dev/null; then
+        if echo "SELECT 1" | npx prisma db execute --stdin 2>/dev/null; then
             log_info "Database is ready!"
             return 0
         fi

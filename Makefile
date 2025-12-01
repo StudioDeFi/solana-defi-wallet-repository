@@ -138,9 +138,10 @@ prisma-generate: ## Generate Prisma client
 	@echo "$(GREEN)Prisma client generated!$(NC)"
 
 .PHONY: prisma-studio
-prisma-studio: ## Open Prisma Studio (database GUI)
+prisma-studio: ## Open Prisma Studio (database GUI) - requires local access to DB
 	@echo "$(GREEN)Opening Prisma Studio...$(NC)"
-	@echo "$(YELLOW)Note: This will run locally, not in Docker$(NC)"
+	@echo "$(YELLOW)Note: Requires DATABASE_URL to be accessible from your host.$(NC)"
+	@echo "$(YELLOW)For Docker database, use: DATABASE_URL=postgresql://\$${POSTGRES_USER:-solana_user}:\$${POSTGRES_PASSWORD}@localhost:\$${DB_PORT:-5432}/\$${POSTGRES_DB:-solana_wallet}$(NC)"
 	npx prisma studio
 
 # ==========================================
