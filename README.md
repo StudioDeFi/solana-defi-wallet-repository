@@ -1,9 +1,6 @@
-
-=======
 ![Auto Assign](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/auto-assign.yml/badge.svg)
 ![Proof HTML](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/proof-html.yml/badge.svg)
 ![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)
->>>>>>> main
 
 # Solana Wallet - Advanced Multi-Platform Wallet
 
@@ -225,10 +222,39 @@ See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/StudioDeFi/solana-defi-wallet-repository)
 
+### One-Click Deploy
+
 1. Click the button above or go to [vercel.com](https://vercel.com)
 2. Import this repository: `https://github.com/StudioDeFi/solana-defi-wallet-repository`
-3. Add environment variables (see [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md))
+3. Add environment variables (see below)
 4. Deploy!
+
+### Required Environment Variables
+
+```env
+# Database (Vercel Postgres or external PostgreSQL with pooling)
+DATABASE_URL="postgres://..."          # Pooled connection URL
+DIRECT_DATABASE_URL="postgres://..."   # Direct connection for migrations
+
+# Application
+NEXT_PUBLIC_SOLANA_RPC_MAINNET="https://api.mainnet-beta.solana.com"
+JWT_SECRET="your-secure-random-secret-key-min-32-chars"
+NEXT_PUBLIC_APP_URL="https://your-domain.vercel.app"
+
+# Optional API Keys
+BIRDEYE_API_KEY="your-birdeye-api-key"
+```
+
+### Database Setup Options
+
+| Provider | Connection Pooling | Recommended For |
+|----------|-------------------|-----------------|
+| Vercel Postgres | Built-in | Vercel deployments |
+| Neon | Built-in | Serverless, branching |
+| Supabase | Via Supavisor | Full Postgres features |
+| PlanetScale | N/A (MySQL) | Not compatible |
+
+See [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md) for detailed setup instructions.
 
 ## 📚 Documentation
 
