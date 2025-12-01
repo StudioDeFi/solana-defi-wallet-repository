@@ -1,0 +1,132 @@
+# ============================================
+# Solana DeFi Wallet - Docker Compose Configuration
+# Production-ready orchestration for all services
+# ============================================
+
+version: '3.8'
+
+services:
+  # ==========================================
+  # PostgreSQL Database Service
+  # ==========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: solana-wallet-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-solana_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-solana_password}
+      POSTGRES_DB: ${POSTGRES_DB:-solana_wallet}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-solana_user} -d ${POSTGRES_DB:-solana_wallet}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - solana-network
+
+  # ==========================================
+  # Main Application Service
+  # ==========================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: solana-wallet-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql://${POSTGRES_USER:-solana_user}:${POSTGRES_PASSWORD:-solana_password}@postgres:5432/${POSTGRES_DB:-solana_wallet}?schema=public
+      
+      # Node environment
+      NODE_ENV: ${NODE_ENV:-production}
+      
+      # Application settings
+      PORT: ${APP_PORT:-3000}
+      HOSTNAME: 0.0.0.0
+      
+      # Solana RPC endpoints
+      NEXT_PUBLIC_SOLANA_RPC_MAINNET: ${NEXT_PUBLIC_SOLANA_RPC_MAINNET:-https://api.mainnet-beta.solana.com}
+      NEXT_PUBLIC_SOLANA_RPC_DEVNET: ${NEXT_PUBLIC_SOLANA_RPC_DEVNET:-https://api.devnet.solana.com}
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      
+      # API Keys (optional)
+      BIRDEYE_API_KEY: ${BIRDEYE_API_KEY:-}
+      COINGECKO_API_KEY: ${COINGECKO_API_KEY:-}
+      
+      # Feature flags
+      ENABLE_MEV_PROTECTION: ${ENABLE_MEV_PROTECTION:-true}
+      ENABLE_ANALYTICS: ${ENABLE_ANALYTICS:-false}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - app_logs:/app/logs
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - solana-network
+
+  # ==========================================
+  # Nginx Reverse Proxy Service
+  # ==========================================
+  nginx:
+    image: nginx:alpine
+    container_name: solana-wallet-nginx
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - solana-network
+
+# ==========================================
+# Named Volumes
+# ==========================================
+volumes:
+  postgres_data:
+    driver: local
+    name: solana-wallet-postgres-data
+  app_logs:
+    driver: local
+    name: solana-wallet-app-logs
+  nginx_logs:
+    driver: local
+    name: solana-wallet-nginx-logs
+
+# ==========================================
+# Networks
+# ==========================================
+networks:
+  solana-network:
+    driver: bridge
+    name: solana-wallet-network
