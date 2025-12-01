@@ -1,14 +1,69 @@
 {
-  "name": "solana-defi-wallet-repository",
+  "name": "solana-wallet-advanced",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "@types/node": "latest",
-    "@types/jsonwebtoken": "latest"
+  "description": "Advanced Solana Wallet with MEV Protection - Production-ready multi-platform DeFi wallet with modern UI, comprehensive API integration, and enterprise-grade security",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudioDeFi/solana-defi-wallet-repository.git"
   },
-  "devDependencies": {
-    // other dev dependencies
-  }
+  "keywords": [
+    "solana",
+    "wallet",
+    "defi",
+    "crypto",
+    "blockchain",
+    "mev-protection",
+    "swap",
+    "trading",
+    "nextjs",
+    "typescript",
+    "web3"
+  ],
+  "author": "StudioDeFi",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:light": "NODE_ENV=production next build",
+    "start": "next start",
+    "clean": "rm -rf . next node_modules",
+    "install:light": "npm install --no-optional --legacy-peer-deps --prefer-offline",
+    "postinstall": "npx prisma generate || echo 'Prisma generate skipped'",
+    "vercel-build": "npx prisma generate && next build",
+    "prebuild": "npx prisma generate || echo 'Prisma generate skipped'"
+  },
+  "dependencies": {
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2. 0",
+    "@solana/web3.js": "^1.87.6",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/spl-token": "^0.3.9",
+    "framer-motion": "^10.16.16",
+    "zustand": "^4.4.7",
+    "axios": "^1. 6.2",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.303.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.2.0",
+    "react-hot-toast": "^2.4.1",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.33",
+    "autoprefixer": "^10.4. 16",
+    "@prisma/client": "^5.0. 0",
+    "prisma": "^5.0.0",
+    "typescript": "^5.3.3",
+    "pino-pretty": "^10.0.0",
+    "@types/node": "^20. 10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18. 2.18",
+    "@types/jsonwebtoken": "^9.0.5"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "bundleDependencies": false
 }
