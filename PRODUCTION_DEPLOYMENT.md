@@ -11,6 +11,7 @@ Set up the following environment variables in your deployment platform (Vercel, 
 ```env
 # Required
 DATABASE_URL="your-production-database-url"
+DIRECT_DATABASE_URL="your-direct-database-url"  # For migrations (non-pooled)
 NEXT_PUBLIC_SOLANA_RPC_MAINNET="https://api.mainnet-beta.solana.com"
 JWT_SECRET="your-secure-random-secret-key-min-32-chars"
 NEXT_PUBLIC_APP_URL="https://your-domain.com"
@@ -23,21 +24,93 @@ JUPITER_API_KEY="your-jupiter-api-key"
 
 ### 2. Database Setup
 
-#### For Vercel (Recommended)
+#### Option A: Vercel Postgres (Recommended for Vercel deployments)
+
 1. Go to Vercel Dashboard → Your Project → Storage
 2. Create a Postgres database
-3. Copy the connection string to `DATABASE_URL`
-
-#### For Other Platforms
-1. Set up a PostgreSQL database (AWS RDS, Supabase, Railway, etc.)
-2. Update `DATABASE_URL` with your connection string
-3. Run migrations:
-   ```bash
-   npx prisma migrate deploy
-   npx prisma generate
+3. Vercel automatically sets these environment variables:
+   - `DATABASE_URL` (pooled connection via PgBouncer)
+   - `POSTGRES_URL_NON_POOLING` or `DIRECT_DATABASE_URL` (direct connection for migrations)
+4. Add to your environment:
+   ```env
+   DIRECT_DATABASE_URL="${POSTGRES_URL_NON_POOLING}"
    ```
 
-### 3. Build & Test Locally
+#### Option B: Neon Postgres (Recommended for serverless)
+
+1. Create a database at [neon.tech](https://neon.tech)
+2. Get connection strings from the dashboard:
+   ```env
+   DATABASE_URL="postgres://user:pass@ep-xxx.region.neon.tech/dbname?sslmode=require&pgbouncer=true"
+   DIRECT_DATABASE_URL="postgres://user:pass@ep-xxx.region.neon.tech/dbname?sslmode=require"
+   ```
+
+#### Option C: Supabase
+
+1. Create project at [supabase.com](https://supabase.com)
+2. Go to Settings → Database → Connection string
+3. Use the pooler connection for `DATABASE_URL`:
+   ```env
+   DATABASE_URL="postgres://postgres.[project]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true"
+   DIRECT_DATABASE_URL="postgres://postgres:[password]@db.[project].supabase.co:5432/postgres"
+   ```
+
+#### Option D: External PostgreSQL with PgBouncer
+
+For AWS RDS, DigitalOcean, Railway, or self-hosted:
+
+1. Set up PgBouncer for connection pooling
+2. Configure environment variables:
+   ```env
+   DATABASE_URL="postgres://user:pass@pgbouncer-host:6432/dbname?pgbouncer=true"
+   DIRECT_DATABASE_URL="postgres://user:pass@db-host:5432/dbname"
+   ```
+
+### 3. Prisma Setup for Vercel
+
+The schema is configured for PostgreSQL with connection pooling support:
+
+```prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+```
+
+**Important Notes:**
+- `DATABASE_URL`: Used for runtime queries (supports pooled connections)
+- `DIRECT_DATABASE_URL`: Used for Prisma Migrate (requires direct connection)
+- The `directUrl` is essential for running migrations on pooled databases
+
+### 4. Preview vs Production Environments
+
+#### Vercel Environment Configuration
+
+| Variable | Preview | Production |
+|----------|---------|------------|
+| `DATABASE_URL` | Preview DB pool URL | Production DB pool URL |
+| `DIRECT_DATABASE_URL` | Preview DB direct URL | Production DB direct URL |
+| `NODE_ENV` | `preview` | `production` |
+| `NEXT_PUBLIC_APP_URL` | Auto-generated | Your domain |
+
+**Setting up separate databases for preview:**
+1. Go to Vercel Dashboard → Settings → Environment Variables
+2. Add variables with "Preview" scope
+3. Use a separate database or branch for preview deployments
+
+#### Branch-based Database Isolation (Neon)
+
+Neon supports database branching for preview deployments:
+```env
+# Preview environment
+DATABASE_URL="postgres://user:pass@ep-xxx-preview.region.neon.tech/dbname"
+
+# Production environment  
+DATABASE_URL="postgres://user:pass@ep-xxx-main.region.neon.tech/dbname"
+```
+
+### 5. Build & Test Locally
 
 ```bash
 # Install dependencies
@@ -45,6 +118,9 @@ npm install --legacy-peer-deps
 
 # Generate Prisma client
 npx prisma generate
+
+# Run migrations (uses DIRECT_DATABASE_URL)
+npx prisma migrate deploy
 
 # Build for production
 npm run build
@@ -65,9 +141,10 @@ npm start
 2. **Configure Environment Variables**
    - Go to Project Settings → Environment Variables
    - Add all required variables from the checklist above
+   - Set different values for Preview vs Production scopes
 
 3. **Configure Build Settings**
-   - Build Command: `npm run build` (auto-detected)
+   - Build Command: `npm run vercel-build` (auto-detected from vercel.json)
    - Output Directory: `.next` (auto-detected)
    - Install Command: `npm install --legacy-peer-deps`
 
@@ -110,6 +187,47 @@ npm start
    - Set environment variables
    - Deploy automatically starts
 
+## 🚀 API Caching & Rate Limiting
+
+### Caching Strategy (Configured in vercel.json)
+
+| Endpoint | Cache Duration | Stale-While-Revalidate |
+|----------|---------------|------------------------|
+| `/api/prices/*` | 30 seconds | 59 seconds |
+| `/api/tokens/*` | 60 seconds | 5 minutes |
+| `/api/swap/*` | No cache | - |
+| `/api/orders/*` | No cache | - |
+
+### Cold Start Mitigation
+
+1. **Function Configuration** (vercel.json):
+   ```json
+   {
+     "functions": {
+       "src/app/api/**/*.ts": {
+         "maxDuration": 30,
+         "memory": 1024
+       }
+     }
+   }
+   ```
+
+2. **Connection Pooling**: Using PgBouncer reduces cold start latency by reusing database connections.
+
+3. **Edge Caching**: Price and token endpoints use `s-maxage` for CDN caching.
+
+### Rate Limiting
+
+Rate limiting is implemented via the `ApiKey` model:
+- Default rate limit: 1000 requests per key
+- Configure per-key limits in the database
+- Monitor usage via API key analytics
+
+For additional rate limiting, consider:
+- Vercel's built-in DDoS protection
+- Upstash Redis for distributed rate limiting
+- API Gateway services (AWS API Gateway, Kong)
+
 ## 🔧 Production Optimizations Enabled
 
 ### Performance
@@ -118,7 +236,8 @@ npm start
 - ✅ Code splitting (vendor, Solana libraries)
 - ✅ Compression enabled
 - ✅ ETags for caching
-- ✅ Standalone output for Docker
+- ✅ API response caching
+- ✅ Connection pooling for database
 
 ### Security
 - ✅ X-Frame-Options: SAMEORIGIN
@@ -127,6 +246,7 @@ npm start
 - ✅ Referrer-Policy configured
 - ✅ Permissions-Policy set
 - ✅ Powered-by header removed
+- ✅ JWT authentication
 
 ### SEO
 - ✅ Comprehensive metadata
