@@ -65,10 +65,10 @@ npm start
 # Run development server with hot reload
 npm run dev
 
-# Light build (skips optional dependencies)
+# Light build (production mode build)
 npm run build:light
 
-# Vercel-specific build
+# Vercel-specific build (generates Prisma client first)
 npm run vercel-build
 ```
 
@@ -214,10 +214,10 @@ For changes to API routes:
 
 The repository includes GitHub Actions workflows in `.github/workflows/`:
 
-- **nextjs.yml**: Builds and deploys to GitHub Pages on push to main
-- **vercel-deploy.yml**: Handles Vercel deployment
-- **auto-assign.yml**: Auto-assigns issues and PRs
-- **proof-html.yml**: HTML validation
+- **nextjs.yml**: Builds and deploys to GitHub Pages on push to `main` branch
+- **vercel-deploy.yml**: Runs on push to `main` - builds project and verifies `.next` directory exists
+- **auto-assign.yml**: Automatically assigns new issues and PRs to @SMSDAO
+- **proof-html.yml**: Validates HTML structure on every push
 
 ## Documentation
 
