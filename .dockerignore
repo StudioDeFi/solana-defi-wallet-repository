@@ -71,9 +71,6 @@ mobile/.expo
 desktop/dist
 desktop/build
 
-# Prisma migrations (handled separately)
-prisma/migrations
-
 # Miscellaneous
 *.pem
 *.key

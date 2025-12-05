@@ -12,16 +12,17 @@ services:
     container_name: solana-wallet-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-solana_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-solana_password}
-      POSTGRES_DB: ${POSTGRES_DB:-solana_wallet}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "${DB_PORT:-5432}:5432"
+    # Port mapping for local development only - remove in production
+    # ports:
+    #   - "${DB_PORT:-5432}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-solana_user} -d ${POSTGRES_DB:-solana_wallet}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,7 +44,7 @@ services:
         condition: service_healthy
     environment:
       # Database configuration
-      DATABASE_URL: postgresql://${POSTGRES_USER:-solana_user}:${POSTGRES_PASSWORD:-solana_password}@postgres:5432/${POSTGRES_DB:-solana_wallet}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
       
       # Node environment
       NODE_ENV: ${NODE_ENV:-production}
@@ -100,7 +101,7 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - nginx_logs:/var/log/nginx
     healthcheck:
-      test: ["CMD", "nginx", "-t"]
+      test: ["CMD-SHELL", "wget -q --spider http://localhost/nginx-health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

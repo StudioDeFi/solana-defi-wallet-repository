@@ -7,12 +7,20 @@
 
 set -e
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Colors for output (disable if NO_COLOR is set or not in a terminal)
+if [ -n "$NO_COLOR" ] || [ ! -t 1 ]; then
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+else
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+fi
 
 log_info() {
     echo "${GREEN}[INFO]${NC} $1"
@@ -63,10 +71,28 @@ wait_for_db() {
     RETRY_COUNT=0
     RETRY_DELAY=${RETRY_DELAY:-2}
     
+    # Extract host and port from DATABASE_URL for pg_isready
+    DB_HOST=$(echo "$DATABASE_URL" | sed -n 's|.*@\([^:/]*\).*|\1|p')
+    DB_PORT=$(echo "$DATABASE_URL" | sed -n 's|.*:\([0-9]*\)/.*|\1|p')
+    DB_HOST=${DB_HOST:-localhost}
+    DB_PORT=${DB_PORT:-5432}
+    
     while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-        if echo "SELECT 1" | npx prisma db execute --stdin 2>/dev/null; then
-            log_info "Database connection established"
-            return 0
+        # Use pg_isready if available, otherwise try prisma
+        if command -v pg_isready >/dev/null 2>&1; then
+            if pg_isready -h "$DB_HOST" -p "$DB_PORT" >/dev/null 2>&1; then
+                log_info "Database connection established"
+                return 0
+            fi
+        else
+            # Fallback: try running a simple prisma command
+            if npx prisma db execute --stdin >/dev/null 2>&1 <<EOF
+SELECT 1;
+EOF
+            then
+                log_info "Database connection established"
+                return 0
+            fi
         fi
         
         RETRY_COUNT=$((RETRY_COUNT + 1))

@@ -33,6 +33,21 @@ const startTime = Date.now();
 // Version from package.json (fallback if env not set)
 const APP_VERSION = '1.0.0';
 
+// Singleton PrismaClient to avoid connection pool exhaustion
+let prismaClient: any = null;
+
+async function getPrismaClient() {
+  if (!prismaClient) {
+    try {
+      const { PrismaClient } = await import('@prisma/client');
+      prismaClient = new PrismaClient();
+    } catch {
+      return null;
+    }
+  }
+  return prismaClient;
+}
+
 /**
  * Check database connectivity
  */
@@ -40,13 +55,17 @@ async function checkDatabase(): Promise<CheckResult> {
   const start = Date.now();
   
   try {
-    // Dynamically import Prisma to handle cases where it might not be configured
-    const { PrismaClient } = await import('@prisma/client');
-    const prisma = new PrismaClient();
+    const prisma = await getPrismaClient();
+    if (!prisma) {
+      return {
+        status: 'warn',
+        message: 'Prisma client not available',
+        latency: Date.now() - start,
+      };
+    }
     
     // Simple query to verify connection
     await prisma.$queryRaw`SELECT 1`;
-    await prisma.$disconnect();
     
     return {
       status: 'pass',
@@ -110,9 +129,8 @@ export async function GET() {
     },
   };
   
-  // Return appropriate status code
-  const statusCode = overallStatus === 'healthy' ? 200 : 
-                     overallStatus === 'degraded' ? 200 : 503;
+  // Return appropriate status code (503 for degraded to signal issues to health check systems)
+  const statusCode = overallStatus === 'healthy' ? 200 : 503;
   
   return NextResponse.json(healthStatus, { status: statusCode });
 }

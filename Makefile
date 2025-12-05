@@ -153,7 +153,7 @@ shell-app: ## Open shell in app container
 
 .PHONY: shell-db
 shell-db: ## Open psql shell in database
-	$(DOCKER_COMPOSE) exec postgres psql -U "$${POSTGRES_USER:-solana_user}" -d "$${POSTGRES_DB:-solana_wallet}"
+	$(DOCKER_COMPOSE) exec postgres psql -U solana_user -d solana_wallet
 
 .PHONY: shell-nginx
 shell-nginx: ## Open shell in nginx container
@@ -176,7 +176,7 @@ health: ## Check health of all services
 	@echo "$(GREEN)Checking service health...$(NC)"
 	@echo ""
 	@echo "PostgreSQL:"
-	@$(DOCKER_COMPOSE) exec postgres pg_isready -U $${POSTGRES_USER:-solana_user} -d $${POSTGRES_DB:-solana_wallet} || echo "$(RED)Not healthy$(NC)"
+	@$(DOCKER_COMPOSE) exec postgres pg_isready -U solana_user -d solana_wallet || echo "$(RED)Not healthy$(NC)"
 	@echo ""
 	@echo "Application:"
 	@curl -s http://localhost:3000/api/health 2>/dev/null || curl -s http://localhost/api/health 2>/dev/null || echo "$(RED)Not healthy$(NC)"
@@ -237,7 +237,7 @@ dev-app: ## Run app in development mode (requires local Node.js)
 backup-db: ## Backup database to ./backups directory
 	@echo "$(GREEN)Creating database backup...$(NC)"
 	@mkdir -p ./backups
-	@$(DOCKER_COMPOSE) exec -T postgres pg_dump -U $${POSTGRES_USER:-solana_user} $${POSTGRES_DB:-solana_wallet} > ./backups/backup_$$(date +%Y%m%d_%H%M%S).sql
+	@$(DOCKER_COMPOSE) exec -T postgres pg_dump -U solana_user solana_wallet > "./backups/backup_$$(date +%Y%m%d_%H%M%S).sql"
 	@echo "$(GREEN)Backup created in ./backups/$(NC)"
 
 .PHONY: restore-db
@@ -248,14 +248,14 @@ restore-db: ## Restore database from backup (usage: make restore-db BACKUP=filen
 		exit 1; \
 	fi
 	@echo "$(YELLOW)Restoring database from $(BACKUP)...$(NC)"
-	@cat $(BACKUP) | $(DOCKER_COMPOSE) exec -T postgres psql -U $${POSTGRES_USER:-solana_user} $${POSTGRES_DB:-solana_wallet}
+	@$(DOCKER_COMPOSE) exec -T postgres psql -U solana_user -d solana_wallet < "$(BACKUP)"
 	@echo "$(GREEN)Database restored!$(NC)"
 
 # ==========================================
 # Quick Commands
 # ==========================================
 .PHONY: fresh
-fresh: down clean up-build migrate ## Fresh start: clean, build, and start everything
+fresh: down up-build migrate ## Fresh start: stop, rebuild, and start everything (non-destructive)
 	@echo "$(GREEN)Fresh deployment completed!$(NC)"
 
 .PHONY: init

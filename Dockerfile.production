@@ -17,6 +17,8 @@ COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
 # Install all dependencies (including devDependencies for building)
+# Note: --legacy-peer-deps is required due to peer dependency conflicts in the Solana ecosystem
+# This is a known issue with @solana/wallet-adapter packages
 RUN npm ci --legacy-peer-deps
 
 # Generate Prisma client

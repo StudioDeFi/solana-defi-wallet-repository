@@ -347,11 +347,14 @@ make logs-db
 ```
 
 **Reset everything:**
+
+> **⚠️ WARNING:** `make clean` is a destructive operation that will delete all containers, volumes, and data. It requires user confirmation before proceeding.
+
 ```bash
-# Remove all containers and volumes (WARNING: deletes data)
+# Remove all containers and volumes (WARNING: deletes data, requires confirmation)
 make clean
 
-# Fresh start
+# Fresh start (non-destructive: stops, rebuilds, and restarts)
 make fresh
 ```
 
