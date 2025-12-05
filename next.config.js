@@ -77,6 +77,12 @@ const nextConfig = {
   },
 
   webpack: (config, { isServer, dev }) => {
+    // Exclude mobile and desktop directories from compilation
+    config.module.rules.push({
+      test: /[\\/](mobile|desktop)[\\/].*\.(ts|tsx|js|jsx)$/,
+      loader: 'ignore-loader',
+    });
+
     // Resolve path aliases
     config.resolve.alias = {
       ...config.resolve.alias,
