@@ -4,6 +4,15 @@
 
 This is a comprehensive Solana wallet application built with Next.js 14, React 18, and TypeScript. The project includes advanced DeFi features like MEV protection, multi-wallet support, and swap aggregation across 22+ DEX platforms.
 
+## Key Documentation
+
+Before making changes, review these essential documents:
+
+- **[README.md](../README.md)** - Project setup and API documentation
+- **[DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md)** - UI components and design patterns
+- **[PRODUCTION_DEPLOYMENT.md](../PRODUCTION_DEPLOYMENT.md)** - Deployment configurations
+- **[CHANGELOG.md](../CHANGELOG.md)** - Version history and release notes
+
 ## Tech Stack
 
 - **Framework**: Next.js 14 with App Router
@@ -128,6 +137,19 @@ This is a DeFi/crypto wallet application. Follow these security practices:
 - Use descriptive test names that explain the expected behavior
 - Test edge cases, especially around numerical operations for crypto amounts
 
+## Environment Setup
+
+Required environment variables (see `.env.example` for template):
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/solana_wallet"
+NEXT_PUBLIC_SOLANA_RPC_MAINNET="https://api.mainnet-beta.solana.com"
+JWT_SECRET="your-secure-random-secret-key-min-32-chars"
+BIRDEYE_API_KEY="your-birdeye-api-key"  # Optional
+```
+
+**Important**: Never commit `.env` files. Only `.env.example` with placeholder values should be version controlled.
+
 ## Build and Development
 
 ```bash
@@ -140,9 +162,27 @@ npm run dev
 # Production build
 npm run build
 
+# Lightweight build (faster, for testing)
+npm run build:light
+
 # Database setup
 npx prisma generate
 npx prisma migrate dev
+```
+
+## Validation Commands
+
+Before submitting changes, ensure:
+
+```bash
+# TypeScript type checking
+npx tsc --noEmit
+
+# Build verification
+npm run build
+
+# Start development server to manually verify changes
+npm run dev
 ```
 
 ## Documentation
@@ -165,3 +205,35 @@ npx prisma migrate dev
 - Update relevant documentation
 - Ensure all tests pass
 - Request review from appropriate team members
+
+## Common Patterns and Troubleshooting
+
+### Adding New API Endpoints
+
+1. Create route file in `src/app/api/[endpoint]/route.ts`
+2. Export HTTP method handlers (GET, POST, etc.)
+3. Use consistent response format: `{ data: T, success: true }` or `{ error: string, success: false }`
+4. Add proper error handling and input validation
+5. Document the endpoint in README.md
+
+### Adding New UI Components
+
+1. Create component in appropriate `src/components/` subdirectory
+2. Use `GlowCard` and `NeonText` for consistent styling
+3. Follow the component pattern with explicit TypeScript props
+4. Add `'use client'` directive for interactive components
+5. Update `DESIGN_SYSTEM.md` for new reusable components
+
+### Working with Solana/Wallet Integration
+
+- Always use the wallet adapter hooks (`useWallet`, `useConnection`)
+- Never expose or log private keys or seed phrases
+- Handle wallet connection states gracefully
+- Test with multiple wallet providers (Phantom, Solflare, etc.)
+
+### Database Changes
+
+1. Modify schema in `prisma/schema.prisma`
+2. Run `npx prisma generate` to update client
+3. Run `npx prisma migrate dev` to create migration
+4. Test with local database before deploying
