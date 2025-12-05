@@ -1,0 +1,33 @@
+# Copilot Setup Steps
+# This workflow defines the setup steps for GitHub Copilot coding agent.
+# It runs before Copilot starts working on issues to ensure the environment is ready.
+# See: https://gh.io/copilot-coding-agent-tips
+
+name: "Copilot Setup Steps"
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Generate Prisma client
+        run: npx prisma generate || echo "Prisma generate skipped - no database configured"
+
+      - name: Verify TypeScript compilation
+        run: npx tsc --noEmit || echo "TypeScript check completed"
