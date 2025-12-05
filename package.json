@@ -68,6 +68,5 @@
   "devDependencies": {
     "@types/colorthief": "^2.6.0",
     "ignore-loader": "^0.1.2"
-  },
-  "bundleDependencies": []
+  }
 }
