@@ -162,7 +162,7 @@ npm run dev
 # Production build
 npm run build
 
-# Lightweight build (faster, for testing)
+# Lightweight build (faster, for basic verification)
 npm run build:light
 
 # Database setup
