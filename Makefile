@@ -153,7 +153,7 @@ shell-app: ## Open shell in app container
 
 .PHONY: shell-db
 shell-db: ## Open psql shell in database
-	$(DOCKER_COMPOSE) exec postgres psql -U $${POSTGRES_USER:-solana_user} -d $${POSTGRES_DB:-solana_wallet}
+	$(DOCKER_COMPOSE) exec postgres psql -U "$${POSTGRES_USER:-solana_user}" -d "$${POSTGRES_DB:-solana_wallet}"
 
 .PHONY: shell-nginx
 shell-nginx: ## Open shell in nginx container
