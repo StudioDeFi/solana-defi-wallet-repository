@@ -21,10 +21,13 @@ npm audit fix || echo "Some vulnerabilities could not be auto-fixed"
 
 echo "✅ Step 4: Verifying TypeScript configuration..."
 echo "   - Checking tsconfig.json excludes mobile/ and desktop/ directories"
-if grep -q '"mobile"' tsconfig.json; then
+if grep -q '"mobile"' tsconfig.json && grep -q '"desktop"' tsconfig.json; then
+    echo "   ✓ mobile and desktop directories are excluded from TypeScript compilation"
+elif grep -q '"mobile"' tsconfig.json; then
     echo "   ✓ mobile directory is excluded from TypeScript compilation"
+    echo "   ⚠ Warning: desktop directory may need to be added to tsconfig.json exclude"
 else
-    echo "   ⚠ Warning: mobile directory may need to be added to tsconfig.json exclude"
+    echo "   ⚠ Warning: mobile and desktop directories may need to be added to tsconfig.json exclude"
 fi
 
 echo "🏗️ Step 5: Testing build..."
@@ -44,4 +47,3 @@ echo "Next steps:"
 echo "1. Review any remaining npm audit warnings"
 echo "2. Commit and push changes"
 echo "3. Verify Vercel deployment succeeds"
-echo ""
