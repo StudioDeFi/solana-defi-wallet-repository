@@ -34,9 +34,11 @@ const startTime = Date.now();
 const APP_VERSION = '1.0.0';
 
 // Singleton PrismaClient to avoid connection pool exhaustion
-let prismaClient: any = null;
+// Note: Using InstanceType for dynamic import type inference
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let prismaClient: InstanceType<any> | null = null;
 
-async function getPrismaClient() {
+async function getPrismaClient(): Promise<InstanceType<any> | null> {
   if (!prismaClient) {
     try {
       const { PrismaClient } = await import('@prisma/client');
