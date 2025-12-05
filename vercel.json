@@ -11,14 +11,36 @@
   "build": {
     "env": {
       "NODE_ENV": "production",
-      "SKIP_ENV_VALIDATION": "true"
+      "SKIP_ENV_VALIDATION": "true",
+      "PRISMA_GENERATE_DATAPROXY": "true"
     }
   },
   "functions": {
     "src/app/api/**/*.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
+  "headers": [
+    {
+      "source": "/api/prices/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "s-maxage=30, stale-while-revalidate=59" }
+      ]
+    },
+    {
+      "source": "/api/tokens/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "s-maxage=60, stale-while-revalidate=300" }
+      ]
+    },
+    {
+      "source": "/api/swap/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+      ]
+    }
+  ],
   "crons": []
 }
 
