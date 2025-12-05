@@ -16,8 +16,8 @@ npm install --legacy-peer-deps
 echo "🔧 Step 2: Generating Prisma client..."
 npx prisma generate || echo "Prisma generate skipped (no DATABASE_URL)"
 
-echo "🛡️ Step 3: Running npm audit fix for security patches..."
-npm audit fix || echo "Some vulnerabilities could not be auto-fixed"
+echo "🛡️ Step 3: Running npm audit fix for production dependencies only..."
+npm audit fix --only=prod || echo "Some vulnerabilities could not be auto-fixed"
 
 echo "✅ Step 4: Verifying TypeScript configuration..."
 echo "   - Checking tsconfig.json excludes mobile/ and desktop/ directories"
