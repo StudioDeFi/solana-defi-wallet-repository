@@ -34,7 +34,7 @@
     "prebuild": "npx prisma generate || echo 'Prisma generate skipped'"
   },
   "dependencies": {
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^7.1.0",
     "@solana/spl-token": "^0.3.9",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
@@ -45,11 +45,15 @@
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
+    "@walletconnect/sign-client": "^2.23.0",
+    "@walletconnect/universal-provider": "^2.23.0",
+    "@web3auth/ws-embed": "^5.3.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.2",
     "clsx": "^2.0.0",
     "colorthief": "^2.6.0",
     "critters": "^0.0.23",
+    "expo-status-bar": "^3.0.9",
     "framer-motion": "^10.16.16",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.303.0",
@@ -63,6 +67,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3",
+    "uuid": "^13.0.0",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
