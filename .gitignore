@@ -71,3 +71,8 @@ mobile/.expo-shared/
 desktop/dist/
 desktop/build/
 
+# Docker
+backups/
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt

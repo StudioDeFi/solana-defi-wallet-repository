@@ -8,6 +8,9 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
   
+  // Enable standalone output for Docker deployments
+  output: 'standalone',
+  
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
