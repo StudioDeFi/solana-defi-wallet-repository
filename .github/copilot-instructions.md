@@ -1,167 +1,194 @@
 # Copilot Instructions for Solana DeFi Wallet Repository
 
-## Project Overview
+> **Trust these instructions.** Only perform additional searches if information here is incomplete or found to be in error.
 
-This is a comprehensive Solana wallet application built with Next.js 14, React 18, and TypeScript. The project includes advanced DeFi features like MEV protection, multi-wallet support, and swap aggregation across 22+ DEX platforms.
+## Repository Summary
 
-## Tech Stack
+A production-ready Solana DeFi wallet application with MEV protection, multi-wallet support, and swap aggregation across 22+ DEX platforms. The codebase is ~2,900 lines of TypeScript/React code in `src/`.
 
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS with custom design system
-- **State Management**: Zustand
-- **Animation**: Framer Motion
-- **Database**: PostgreSQL with Prisma ORM
-- **Blockchain**: Solana (@solana/web3.js, wallet-adapter)
+## Tech Stack & Requirements
+
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| Runtime | Node.js | 20.x (required) |
+| Framework | Next.js | 14.x (App Router) |
+| Language | TypeScript | 5.x (strict mode) |
+| Styling | Tailwind CSS | 3.x |
+| State | Zustand | 4.x |
+| Animation | Framer Motion | 10.x |
+| Database | PostgreSQL + Prisma | 5.x |
+| Blockchain | @solana/web3.js, wallet-adapter | 1.x |
+
+## Build Commands (Validated)
+
+**ALWAYS run commands in this order.** The `.npmrc` file configures `legacy-peer-deps=true` globally.
+
+```bash
+# 1. Install dependencies (legacy-peer-deps is configured in .npmrc)
+npm install
+
+# 2. Generate Prisma client (runs automatically via postinstall, but can run manually)
+npx prisma generate
+
+# 3. Development server (http://localhost:3000)
+npm run dev
+
+# 4. Production build (~30-60 seconds)
+npm run build
+
+# 5. Start production server
+npm run start
+```
+
+### Build Notes
+- The build shows "Dynamic server usage" messages for API routes - this is expected behavior, not an error
+- Build creates `.next/` directory with compiled output
+- Database is optional for basic features (wallet connection, swap quotes, token browsing)
+- Database required for: limit orders, DCA orders, user sessions
+
+### Clean Build (if issues occur)
+```bash
+npm run clean       # Removes .next and node_modules directories
+npm install         # Reinstall dependencies (uses .npmrc settings)
+npm run build
+```
 
 ## Project Structure
 
 ```
-src/
-├── app/              # Next.js App Router pages and API routes
-│   ├── api/          # API endpoints for swap, tokens, prices, orders
-│   ├── layout.tsx    # Root layout with providers
-│   └── page.tsx      # Home page
-├── components/       # React components
-│   ├── wallet/       # Wallet connection components
-│   ├── swap/         # Swap interface components
-│   ├── tokens/       # Token list and display components
-│   ├── portfolio/    # Portfolio tracking components
-│   ├── theme/        # Theme system (ThemeProvider, ThemeToggle)
-│   └── ui/           # Reusable UI components (GlowCard, NeonText, etc.)
-├── lib/              # Core utility libraries
-├── hooks/            # Custom React hooks
-├── store/            # Zustand state stores
-├── types/            # TypeScript type definitions
-├── utils/            # Helper utilities
-└── middleware/       # Next.js middleware
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── api/                # API routes
+│   │   │   ├── orders/         # Limit & DCA order endpoints
+│   │   │   ├── prices/         # Price data endpoints
+│   │   │   ├── swap/           # Ultra/Standard/Lite swap APIs
+│   │   │   └── tokens/         # Token registry endpoints
+│   │   ├── globals.css         # Global styles & CSS variables
+│   │   ├── layout.tsx          # Root layout with providers
+│   │   └── page.tsx            # Home page (main entry)
+│   ├── components/
+│   │   ├── wallet/             # WalletProvider, WalletButton
+│   │   ├── swap/               # SwapInterface
+│   │   ├── tokens/             # TokenList
+│   │   ├── portfolio/          # Portfolio display
+│   │   ├── theme/              # ThemeProvider, ThemeSwitcher
+│   │   ├── ui/                 # GlowCard, NeonText, AuraBackground
+│   │   └── ErrorBoundary.tsx   # Global error handler
+│   ├── lib/                    # Utilities (db.ts, solana.ts, aggregators)
+│   ├── hooks/                  # useWallet, useTokenColors
+│   ├── store/                  # Zustand stores (theme-store, wallet-store)
+│   ├── types/                  # TypeScript interfaces (index.ts)
+│   └── utils/                  # Helpers (cn.ts for class merging)
+├── prisma/
+│   └── schema.prisma           # Database schema (User, Session, Orders, etc.)
+├── .github/workflows/          # CI pipelines
+├── package.json                # Dependencies & scripts
+├── next.config.js              # Next.js configuration
+├── tailwind.config.js          # Tailwind theme/animations
+├── tsconfig.json               # TypeScript config with path aliases
+└── vercel.json                 # Vercel deployment config
 ```
+
+## Path Aliases (use these for imports)
+
+```typescript
+import { Component } from '@/components/...';
+import { util } from '@/lib/...';
+import { useHook } from '@/hooks/...';
+import { useStore } from '@/store/...';
+import { Type } from '@/types/...';
+import { helper } from '@/utils/...';
+```
+
+## GitHub Workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `vercel-deploy.yml` | Push to main | Build verification & Vercel deploy |
+| `nextjs.yml` | Push to main | GitHub Pages deployment |
+| `auto-assign.yml` | Issue/PR opened | Auto-assign to maintainer |
+| `proof-html.yml` | Push | HTML validation |
 
 ## Coding Standards
 
-### TypeScript
-
-- Use strict mode (`"strict": true` in tsconfig.json)
-- Define explicit types for function parameters and return values
-- Use interfaces for object shapes, type aliases for unions/primitives
-- Prefer `type` for component props
-- Use path aliases (`@/components/*`, `@/lib/*`, etc.)
-
-### React/Next.js
-
-- Use functional components with hooks
-- Mark client components with `'use client'` directive
-- Keep server components as default when possible
-- Use the App Router patterns for routing and data fetching
-- Wrap error-prone components with `ErrorBoundary`
-
-### Component Patterns
-
+### Components
 ```typescript
-// Component file structure
-'use client'; // if needed
+'use client'; // Only for client components
 
 import React from 'react';
-// External imports
-// Internal imports using path aliases
+import { ExternalDep } from 'external-package';
+import { InternalDep } from '@/components/...';
 
 interface ComponentProps {
-  // Props definition
+  prop: string;
 }
 
-export function ComponentName({ prop1, prop2 }: ComponentProps) {
-  // Component logic
-  return (
-    // JSX
-  );
+export function Component({ prop }: ComponentProps) {
+  return <div>{prop}</div>;
 }
+```
+
+### API Routes
+```typescript
+// Return format - always include success flag
+{ data: T, success: true }      // Success
+{ error: string, success: false } // Error
 ```
 
 ### Styling
+- Use Tailwind utilities with `clsx` and `tailwind-merge`
+- Theme colors via CSS variables: `var(--color-primary)`, `var(--color-glow)`
+- See `DESIGN_SYSTEM.md` for component patterns
 
-- Use Tailwind CSS utility classes
-- Follow the design system defined in `DESIGN_SYSTEM.md`
-- Use CSS variables for theme colors (e.g., `var(--color-primary)`)
-- Use `clsx` and `tailwind-merge` for conditional classes
+## Security (Critical for DeFi)
 
-### State Management
-
-- Use Zustand for global state
-- Keep component-local state with `useState`
-- Use `useEffect` for side effects
-
-## API Conventions
-
-### API Routes
-
-- Located in `src/app/api/`
-- Use proper HTTP methods (GET, POST, PUT, DELETE)
-- Return consistent JSON responses
-- Include proper error handling and status codes
-- Validate input with proper type checking
-
-### Response Format
-
-```typescript
-// Success response
-{ data: T, success: true }
-
-// Error response
-{ error: string, success: false }
-```
-
-## Security Considerations
-
-This is a DeFi/crypto wallet application. Follow these security practices:
-
-- Never log or expose private keys or seed phrases
-- Validate all user inputs, especially token addresses and amounts
-- Use rate limiting on API endpoints
-- Sanitize data before database operations
+- **NEVER** log or expose private keys, seed phrases, or wallet secrets
+- **ALWAYS** validate token addresses (Solana base58 format)
+- **ALWAYS** sanitize user inputs before database operations
+- **NEVER** commit `.env` files (verify in `.gitignore`)
 - Use JWT for session management
-- Follow Solana security best practices for transaction signing
-- Never commit `.env` files (check `.gitignore`)
+- API routes should include rate limiting
 
-## Testing
+## Configuration Files
 
-- Tests should be co-located with the code they test or in a `__tests__` directory
-- Use descriptive test names that explain the expected behavior
-- Test edge cases, especially around numerical operations for crypto amounts
+| File | Purpose |
+|------|---------|
+| `package.json` | Dependencies, scripts |
+| `tsconfig.json` | TypeScript with path aliases |
+| `next.config.js` | Next.js, webpack, security headers |
+| `tailwind.config.js` | Theme colors, animations |
+| `postcss.config.js` | PostCSS plugins |
+| `vercel.json` | Deployment, API function settings |
+| `prisma/schema.prisma` | Database models |
+| `.npmrc` | npm config (legacy-peer-deps=true) |
 
-## Build and Development
+## Key Documentation
+
+- `README.md` - Project overview, setup, API docs
+- `DESIGN_SYSTEM.md` - UI components, architecture, styling
+- `BUILD_VERIFICATION.md` - Build troubleshooting
+- `PRODUCTION_DEPLOYMENT.md` - Vercel deployment guide
+- `QUICK_START.md` - Local development guide
+
+## Database Setup (Optional)
 
 ```bash
-# Install dependencies
-npm install
-
-# Development server
-npm run dev
-
-# Production build
-npm run build
-
-# Database setup
-npx prisma generate
-npx prisma migrate dev
+# Only needed for orders/sessions features
+npx prisma generate           # Generate client
+npx prisma migrate dev        # Create/apply migrations
 ```
 
-## Documentation
+Environment variables needed:
+```
+DATABASE_URL="postgresql://username:password@localhost:5432/solana_wallet"
+DIRECT_DATABASE_URL="postgresql://username:password@localhost:5432/solana_wallet"
+```
 
-- Update `README.md` for significant feature changes
-- Document new API endpoints in the API Documentation section
-- Keep `CHANGELOG.md` updated for releases
-- Update `DESIGN_SYSTEM.md` for new UI components
+## Validation Checklist
 
-## Commit Messages
-
-- Use clear, descriptive commit messages
-- Start with a verb (Add, Fix, Update, Remove, Refactor)
-- Reference issue numbers when applicable
-
-## Pull Request Guidelines
-
-- Keep PRs focused on a single feature or fix
-- Include a clear description of changes
-- Update relevant documentation
-- Ensure all tests pass
-- Request review from appropriate team members
+Before submitting changes:
+1. ✅ `npm run build` completes without errors
+2. ✅ No TypeScript errors in modified files
+3. ✅ Path aliases used for imports
+4. ✅ No `.env` values committed
+5. ✅ API responses use `{ data, success }` format
