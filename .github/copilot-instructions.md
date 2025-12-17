@@ -14,6 +14,72 @@ This is a comprehensive Solana wallet application built with Next.js 14, React 1
 - **Database**: PostgreSQL with Prisma ORM
 - **Blockchain**: Solana (@solana/web3.js, wallet-adapter)
 
+## Quick Start / Bootstrap
+
+```bash
+# 1. Install dependencies (uses legacy peer deps for Solana compatibility)
+npm install --legacy-peer-deps
+
+# 2. Generate Prisma client (required before build)
+npx prisma generate
+
+# 3. Start development server
+npm run dev
+
+# 4. Open http://localhost:3000 in your browser
+```
+
+### Environment Setup
+
+Copy `.env.example` to `.env` and configure required variables:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/solana_wallet"
+NEXT_PUBLIC_SOLANA_RPC_MAINNET="https://api.mainnet-beta.solana.com"
+JWT_SECRET="your-secret-key"
+BIRDEYE_API_KEY="your-birdeye-api-key"
+```
+
+### Database Setup (if using database features)
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Run database migrations (requires PostgreSQL connection)
+npx prisma migrate dev
+
+# View/manage data with Prisma Studio
+npx prisma studio
+```
+
+## Build and Verification Commands
+
+```bash
+# Build for production (includes TypeScript type checking)
+npm run build
+
+# Start production server
+npm start
+
+# Run development server with hot reload
+npm run dev
+
+# Light build (production mode build)
+npm run build:light
+
+# Vercel-specific build (generates Prisma client first)
+npm run vercel-build
+```
+
+### Verification Checklist
+
+When making changes, verify:
+1. `npm run build` completes without errors
+2. Development server starts successfully with `npm run dev`
+3. Changes render correctly in the browser at http://localhost:3000
+4. API endpoints return expected responses (test with curl or browser dev tools)
+
 ## Project Structure
 
 ```
@@ -124,26 +190,34 @@ This is a DeFi/crypto wallet application. Follow these security practices:
 
 ## Testing
 
+This repository does not currently have automated tests configured. When adding tests:
+
 - Tests should be co-located with the code they test or in a `__tests__` directory
 - Use descriptive test names that explain the expected behavior
 - Test edge cases, especially around numerical operations for crypto amounts
+- Consider testing Solana transaction building and wallet interactions
 
-## Build and Development
+### Manual Testing
 
-```bash
-# Install dependencies
-npm install
+For changes to UI components:
+1. Start the development server: `npm run dev`
+2. Navigate to `http://localhost:3000`
+3. Test wallet connection with browser wallet extensions (Phantom, Solflare, etc.)
+4. Verify responsive design on different screen sizes
 
-# Development server
-npm run dev
+For changes to API routes:
+1. Test endpoints using curl or Postman
+2. Verify response format matches documented structure
+3. Check error handling for invalid inputs
 
-# Production build
-npm run build
+## CI/CD Workflows
 
-# Database setup
-npx prisma generate
-npx prisma migrate dev
-```
+The repository includes GitHub Actions workflows in `.github/workflows/`:
+
+- **nextjs.yml**: Builds and deploys to GitHub Pages on push to `main` branch
+- **vercel-deploy.yml**: Runs on push to `main` - builds project and verifies `.next` directory exists
+- **auto-assign.yml**: Automatically assigns new issues and PRs to @SMSDAO
+- **proof-html.yml**: Validates HTML structure on every push
 
 ## Documentation
 
@@ -165,3 +239,24 @@ npx prisma migrate dev
 - Update relevant documentation
 - Ensure all tests pass
 - Request review from appropriate team members
+
+## Troubleshooting
+
+### Common Issues
+
+**Build fails with Prisma error:**
+```bash
+npx prisma generate
+```
+
+**Peer dependency warnings during install:**
+```bash
+npm install --legacy-peer-deps
+```
+
+**TypeScript path alias errors:**
+Ensure you're using the correct import path (e.g., `@/components/ui/GlowCard`)
+
+**Environment variable issues:**
+- Verify `.env` file exists and has required variables
+- Restart the development server after changing environment variables
