@@ -8,6 +8,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
 interface HealthStatus {
   status: 'healthy' | 'unhealthy' | 'degraded';
@@ -34,14 +35,11 @@ const startTime = Date.now();
 const APP_VERSION = '1.0.0';
 
 // Singleton PrismaClient to avoid connection pool exhaustion
-// Note: Using InstanceType for dynamic import type inference
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let prismaClient: InstanceType<any> | null = null;
+let prismaClient: PrismaClient | null = null;
 
-async function getPrismaClient(): Promise<InstanceType<any> | null> {
+function getPrismaClient(): PrismaClient | null {
   if (!prismaClient) {
     try {
-      const { PrismaClient } = await import('@prisma/client');
       prismaClient = new PrismaClient();
     } catch {
       return null;
@@ -57,7 +55,7 @@ async function checkDatabase(): Promise<CheckResult> {
   const start = Date.now();
   
   try {
-    const prisma = await getPrismaClient();
+    const prisma = getPrismaClient();
     if (!prisma) {
       return {
         status: 'warn',
