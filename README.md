@@ -229,6 +229,163 @@ See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 3. Add environment variables (see below)
 4. Deploy!
 
+## 🐳 Docker Deployment
+
+Deploy the full application stack locally using Docker with a single command.
+
+### Prerequisites
+
+- **Docker**: Version 20.10+ ([Install Docker](https://docs.docker.com/get-docker/))
+- **Docker Compose**: Version 2.0+ (included with Docker Desktop)
+- **Make**: GNU Make (optional, for convenience commands)
+
+### Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/StudioDeFi/solana-defi-wallet-repository.git
+cd solana-defi-wallet-repository
+
+# 2. Copy environment file and configure
+cp .env.example .env
+# Edit .env with your configuration (see Environment Variables below)
+
+# 3. Build and start all services
+make up-build
+# Or without make: docker compose up -d --build
+
+# 4. Check service status
+make status
+
+# 5. View logs
+make logs
+```
+
+The application will be available at:
+- **Web App**: http://localhost (via nginx)
+- **Direct App**: http://localhost:3000
+- **Database**: localhost:5432
+
+### Environment Variables
+
+Key environment variables to configure in `.env`:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `POSTGRES_USER` | Database username | `solana_user` |
+| `POSTGRES_PASSWORD` | Database password | (required) |
+| `POSTGRES_DB` | Database name | `solana_wallet` |
+| `JWT_SECRET` | JWT signing secret | (required) |
+| `NEXT_PUBLIC_SOLANA_RPC_MAINNET` | Solana RPC endpoint | Public endpoint |
+| `BIRDEYE_API_KEY` | Birdeye API key | (optional) |
+| `LOG_LEVEL` | Logging level | `info` |
+
+### Makefile Commands
+
+| Command | Description |
+|---------|-------------|
+| `make up` | Start all services |
+| `make down` | Stop and remove all services |
+| `make restart` | Restart all services |
+| `make logs` | View logs from all services |
+| `make logs-app` | View application logs |
+| `make logs-db` | View database logs |
+| `make build` | Build Docker images |
+| `make rebuild` | Rebuild images (no cache) |
+| `make migrate` | Run database migrations |
+| `make seed` | Seed the database |
+| `make shell-app` | Open shell in app container |
+| `make shell-db` | Open psql shell in database |
+| `make status` | Show status of all services |
+| `make health` | Check health of all services |
+| `make clean` | Remove containers and volumes |
+| `make backup-db` | Backup database |
+| `make restore-db` | Restore database from backup |
+
+### Database Management
+
+```bash
+# Run migrations
+make migrate
+
+# Check migration status
+make migrate-status
+
+# Seed database with test data
+make seed
+
+# Access database shell
+make shell-db
+
+# Backup database
+make backup-db
+
+# Restore from backup
+make restore-db BACKUP=backups/backup_file.sql
+```
+
+### Troubleshooting
+
+**Services won't start:**
+```bash
+# Check logs for errors
+make logs
+
+# Rebuild from scratch
+make rebuild
+make up
+```
+
+**Database connection issues:**
+```bash
+# Verify database is running
+make status
+
+# Check database health
+make health
+
+# View database logs
+make logs-db
+```
+
+**Reset everything:**
+
+> **⚠️ WARNING:** `make clean` is a destructive operation that will delete all containers, volumes, and data. It requires user confirmation before proceeding.
+
+```bash
+# Remove all containers and volumes (WARNING: deletes data, requires confirmation)
+make clean
+
+# Fresh start (non-destructive: stops, rebuilds, and restarts)
+make fresh
+```
+
+### Development vs Production
+
+| Aspect | Development | Production |
+|--------|-------------|------------|
+| Image size | Larger (dev deps) | Optimized (multi-stage) |
+| User | Root (convenience) | Non-root (security) |
+| Logs | Verbose | Configurable level |
+| Rebuild | Frequent | Cache-optimized |
+
+For production deployments, ensure:
+- Strong passwords in `.env`
+- SSL certificates in `nginx/ssl/`
+- Proper firewall rules
+- Regular database backups
+
+### Architecture
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Nginx     │────▶│    App      │────▶│  PostgreSQL │
+│   :80/:443  │     │    :3000    │     │    :5432    │
+└─────────────┘     └─────────────┘     └─────────────┘
+     ▲                    │
+     │              Health Check
+   Client           /api/health
+```
 ### Required Environment Variables
 
 ```env
