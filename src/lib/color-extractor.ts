@@ -1,3 +1,5 @@
+import ColorThief from 'colorthief';
+
 export interface ColorPalette {
   dominant: string;
   palette: string[];

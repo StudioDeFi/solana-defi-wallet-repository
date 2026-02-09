@@ -51,12 +51,6 @@ export default function Home() {
             </p>
           </div>
           <div className="flex items-center gap-4 flex-shrink-0">
-            <a
-              href="/ai-dashboard"
-              className="px-4 py-2 rounded-lg bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors text-sm"
-            >
-              AI Dashboard
-            </a>
             <ThemeSwitcher />
             <WalletButton />
           </div>
