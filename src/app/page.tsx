@@ -50,7 +50,13 @@ export default function Home() {
               Advanced Multi-Platform Wallet with MEV Protection
             </p>
           </div>
-          <div className="flex items-center gap-4 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 flex-wrap">
+            <a
+              href="/ai-dashboard"
+              className="px-3 sm:px-4 py-2 rounded-lg bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors text-xs sm:text-sm whitespace-nowrap"
+            >
+              AI Builder
+            </a>
             <ThemeSwitcher />
             <WalletButton />
           </div>
