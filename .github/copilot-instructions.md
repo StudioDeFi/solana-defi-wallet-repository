@@ -2,120 +2,261 @@
 
 ## Project Overview
 
-This is a comprehensive Solana wallet application with advanced features including MEV protection, multi-platform support (Web, Mobile, Desktop), and extensive DeFi integrations.
+This is a comprehensive Solana wallet application built with Next.js 14, React 18, and TypeScript. The project includes advanced DeFi features like MEV protection, multi-wallet support, and swap aggregation across 22+ DEX platforms.
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS, Framer Motion
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS with custom design system
 - **State Management**: Zustand
-- **Blockchain**: @solana/web3.js, @solana/wallet-adapter
+- **Animation**: Framer Motion
 - **Database**: PostgreSQL with Prisma ORM
-- **API**: Next.js API Routes
+- **Blockchain**: Solana (@solana/web3.js, wallet-adapter)
+
+## Quick Start / Bootstrap
+
+```bash
+# 1. Install dependencies (uses legacy peer deps for Solana compatibility)
+npm install --legacy-peer-deps
+
+# 2. Generate Prisma client (required before build)
+npx prisma generate
+
+# 3. Start development server
+npm run dev
+
+# 4. Open http://localhost:3000 in your browser
+```
+
+### Environment Setup
+
+Copy `.env.example` to `.env` and configure required variables:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/solana_wallet"
+NEXT_PUBLIC_SOLANA_RPC_MAINNET="https://api.mainnet-beta.solana.com"
+JWT_SECRET="your-secret-key"
+BIRDEYE_API_KEY="your-birdeye-api-key"
+```
+
+### Database Setup (if using database features)
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Run database migrations (requires PostgreSQL connection)
+npx prisma migrate dev
+
+# View/manage data with Prisma Studio
+npx prisma studio
+```
+
+## Build and Verification Commands
+
+```bash
+# Build for production (includes TypeScript type checking)
+npm run build
+
+# Start production server
+npm start
+
+# Run development server with hot reload
+npm run dev
+
+# Light build (production mode build)
+npm run build:light
+
+# Vercel-specific build (generates Prisma client first)
+npm run vercel-build
+```
+
+### Verification Checklist
+
+When making changes, verify:
+1. `npm run build` completes without errors
+2. Development server starts successfully with `npm run dev`
+3. Changes render correctly in the browser at http://localhost:3000
+4. API endpoints return expected responses (test with curl or browser dev tools)
 
 ## Project Structure
 
 ```
-├── src/
-│   ├── app/              # Next.js App Router pages and API routes
-│   ├── components/       # React components (wallet, swap, tokens, UI)
-│   ├── hooks/            # Custom React hooks
-│   ├── lib/              # Utility libraries (solana, aggregators, registry)
-│   ├── store/            # Zustand state stores
-│   ├── types/            # TypeScript type definitions
-│   ├── utils/            # Helper utilities
-│   ├── api/              # API SDK
-│   └── middleware/       # Request middleware
-├── prisma/               # Database schema
-├── public/               # Static assets
-├── mobile/               # React Native mobile app
-└── desktop/              # Electron/Tauri desktop app
+src/
+├── app/              # Next.js App Router pages and API routes
+│   ├── api/          # API endpoints for swap, tokens, prices, orders
+│   ├── layout.tsx    # Root layout with providers
+│   └── page.tsx      # Home page
+├── components/       # React components
+│   ├── wallet/       # Wallet connection components
+│   ├── swap/         # Swap interface components
+│   ├── tokens/       # Token list and display components
+│   ├── portfolio/    # Portfolio tracking components
+│   ├── theme/        # Theme system (ThemeProvider, ThemeToggle)
+│   └── ui/           # Reusable UI components (GlowCard, NeonText, etc.)
+├── lib/              # Core utility libraries
+├── hooks/            # Custom React hooks
+├── store/            # Zustand state stores
+├── types/            # TypeScript type definitions
+├── utils/            # Helper utilities
+└── middleware/       # Next.js middleware
 ```
 
-## Build and Development Commands
-
-```bash
-# Install dependencies
-npm install
-
-# Development server
-npm run dev
-
-# Production build
-npm run build
-
-# Prisma database operations
-npx prisma generate
-npx prisma migrate dev
-```
-
-## Coding Conventions
+## Coding Standards
 
 ### TypeScript
 
-- Use strict TypeScript with proper type annotations
-- Prefer interfaces for object types, types for unions/primitives
-- Always define return types for functions
-- Use path aliases (`@/*`) for imports from src directory
+- Use strict mode (`"strict": true` in tsconfig.json)
+- Define explicit types for function parameters and return values
+- Use interfaces for object shapes, type aliases for unions/primitives
+- Prefer `type` for component props
+- Use path aliases (`@/components/*`, `@/lib/*`, etc.)
 
-### React Components
+### React/Next.js
 
 - Use functional components with hooks
-- Place component-specific types in the same file or in `src/types/`
-- Use Framer Motion for animations
-- Follow the existing component structure in `src/components/`
+- Mark client components with `'use client'` directive
+- Keep server components as default when possible
+- Use the App Router patterns for routing and data fetching
+- Wrap error-prone components with `ErrorBoundary`
+
+### Component Patterns
+
+```typescript
+// Component file structure
+'use client'; // if needed
+
+import React from 'react';
+// External imports
+// Internal imports using path aliases
+
+interface ComponentProps {
+  // Props definition
+}
+
+export function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // Component logic
+  return (
+    // JSX
+  );
+}
+```
 
 ### Styling
 
-- Use Tailwind CSS for styling
-- Follow the design system documented in `DESIGN_SYSTEM.md`
-- Use the existing UI components in `src/components/ui/` (GlowCard, NeonText, etc.)
-- Support Dark, Dim, and Day themes
+- Use Tailwind CSS utility classes
+- Follow the design system defined in `DESIGN_SYSTEM.md`
+- Use CSS variables for theme colors (e.g., `var(--color-primary)`)
+- Use `clsx` and `tailwind-merge` for conditional classes
+
+### State Management
+
+- Use Zustand for global state
+- Keep component-local state with `useState`
+- Use `useEffect` for side effects
+
+## API Conventions
 
 ### API Routes
 
-- Place API routes in `src/app/api/`
-- Use proper error handling with try-catch blocks
-- Implement rate limiting for public endpoints
-- Return consistent JSON response structures
+- Located in `src/app/api/`
+- Use proper HTTP methods (GET, POST, PUT, DELETE)
+- Return consistent JSON responses
+- Include proper error handling and status codes
+- Validate input with proper type checking
 
-### Solana Integration
+### Response Format
 
-- Use `@solana/web3.js` for blockchain interactions
-- Use wallet adapters from `@solana/wallet-adapter-*` packages
-- Implement MEV protection for swap transactions when appropriate
-- Handle transaction errors gracefully with user-friendly messages
+```typescript
+// Success response
+{ data: T, success: true }
+
+// Error response
+{ error: string, success: false }
+```
 
 ## Security Considerations
 
-- Never commit secrets or API keys to the repository
-- Use environment variables for sensitive configuration
-- Validate and sanitize all user inputs
-- Use JWT for authentication where applicable
-- Implement rate limiting on API endpoints
-- Be cautious with transaction signing and wallet operations
+This is a DeFi/crypto wallet application. Follow these security practices:
 
-## Files to Avoid Modifying
-
-- `.env` and `.env.*` files (contain secrets)
-- `node_modules/` directory
-- `.next/` build output directory
-- `prisma/migrations/` (use Prisma CLI for migrations)
+- Never log or expose private keys or seed phrases
+- Validate all user inputs, especially token addresses and amounts
+- Use rate limiting on API endpoints
+- Sanitize data before database operations
+- Use JWT for session management
+- Follow Solana security best practices for transaction signing
+- Never commit `.env` files (check `.gitignore`)
 
 ## Testing
 
-This project does not have a formal test suite. When adding new features:
-- Manually test all changes in the development environment
-- Verify wallet connection flows work with multiple wallet providers
-- Test API endpoints with various input scenarios
-- Check responsive design across different screen sizes
+This repository does not currently have automated tests configured. When adding tests:
+
+- Tests should be co-located with the code they test or in a `__tests__` directory
+- Use descriptive test names that explain the expected behavior
+- Test edge cases, especially around numerical operations for crypto amounts
+- Consider testing Solana transaction building and wallet interactions
+
+### Manual Testing
+
+For changes to UI components:
+1. Start the development server: `npm run dev`
+2. Navigate to `http://localhost:3000`
+3. Test wallet connection with browser wallet extensions (Phantom, Solflare, etc.)
+4. Verify responsive design on different screen sizes
+
+For changes to API routes:
+1. Test endpoints using curl or Postman
+2. Verify response format matches documented structure
+3. Check error handling for invalid inputs
+
+## CI/CD Workflows
+
+The repository includes GitHub Actions workflows in `.github/workflows/`:
+
+- **nextjs.yml**: Builds and deploys to GitHub Pages on push to `main` branch
+- **vercel-deploy.yml**: Runs on push to `main` - builds project and verifies `.next` directory exists
+- **auto-assign.yml**: Automatically assigns new issues and PRs to @SMSDAO
+- **proof-html.yml**: Validates HTML structure on every push
 
 ## Documentation
 
 - Update `README.md` for significant feature changes
-- Document API changes in the API Documentation section
-- Keep `CHANGELOG.md` updated for version releases
-- Refer to existing documentation files for context:
-  - `DESIGN_SYSTEM.md` - Component architecture
-  - `PRODUCTION_DEPLOYMENT.md` - Deployment instructions
-  - `API_KEYS_GUIDE.md` - API configuration
+- Document new API endpoints in the API Documentation section
+- Keep `CHANGELOG.md` updated for releases
+- Update `DESIGN_SYSTEM.md` for new UI components
+
+## Commit Messages
+
+- Use clear, descriptive commit messages
+- Start with a verb (Add, Fix, Update, Remove, Refactor)
+- Reference issue numbers when applicable
+
+## Pull Request Guidelines
+
+- Keep PRs focused on a single feature or fix
+- Include a clear description of changes
+- Update relevant documentation
+- Ensure all tests pass
+- Request review from appropriate team members
+
+## Troubleshooting
+
+### Common Issues
+
+**Build fails with Prisma error:**
+```bash
+npx prisma generate
+```
+
+**Peer dependency warnings during install:**
+```bash
+npm install --legacy-peer-deps
+```
+
+**TypeScript path alias errors:**
+Ensure you're using the correct import path (e.g., `@/components/ui/GlowCard`)
+
+**Environment variable issues:**
+- Verify `.env` file exists and has required variables
+- Restart the development server after changing environment variables

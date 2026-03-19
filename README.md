@@ -1,9 +1,6 @@
-
-=======
 ![Auto Assign](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/auto-assign.yml/badge.svg)
 ![Proof HTML](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/proof-html.yml/badge.svg)
 ![Vercel Deployment](https://github.com/StudioDeFi/solana-defi-wallet-repository/actions/workflows/vercel-deploy.yml/badge.svg)
->>>>>>> main
 
 # Solana Wallet - Advanced Multi-Platform Wallet
 
@@ -225,10 +222,196 @@ See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/StudioDeFi/solana-defi-wallet-repository)
 
+### One-Click Deploy
+
 1. Click the button above or go to [vercel.com](https://vercel.com)
 2. Import this repository: `https://github.com/StudioDeFi/solana-defi-wallet-repository`
-3. Add environment variables (see [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md))
+3. Add environment variables (see below)
 4. Deploy!
+
+## 🐳 Docker Deployment
+
+Deploy the full application stack locally using Docker with a single command.
+
+### Prerequisites
+
+- **Docker**: Version 20.10+ ([Install Docker](https://docs.docker.com/get-docker/))
+- **Docker Compose**: Version 2.0+ (included with Docker Desktop)
+- **Make**: GNU Make (optional, for convenience commands)
+
+### Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/StudioDeFi/solana-defi-wallet-repository.git
+cd solana-defi-wallet-repository
+
+# 2. Copy environment file and configure
+cp .env.example .env
+# Edit .env with your configuration (see Environment Variables below)
+
+# 3. Build and start all services
+make up-build
+# Or without make: docker compose up -d --build
+
+# 4. Check service status
+make status
+
+# 5. View logs
+make logs
+```
+
+The application will be available at:
+- **Web App**: http://localhost (via nginx)
+- **Direct App**: http://localhost:3000
+- **Database**: localhost:5432
+
+### Environment Variables
+
+Key environment variables to configure in `.env`:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `POSTGRES_USER` | Database username | `solana_user` |
+| `POSTGRES_PASSWORD` | Database password | (required) |
+| `POSTGRES_DB` | Database name | `solana_wallet` |
+| `JWT_SECRET` | JWT signing secret | (required) |
+| `NEXT_PUBLIC_SOLANA_RPC_MAINNET` | Solana RPC endpoint | Public endpoint |
+| `BIRDEYE_API_KEY` | Birdeye API key | (optional) |
+| `LOG_LEVEL` | Logging level | `info` |
+
+### Makefile Commands
+
+| Command | Description |
+|---------|-------------|
+| `make up` | Start all services |
+| `make down` | Stop and remove all services |
+| `make restart` | Restart all services |
+| `make logs` | View logs from all services |
+| `make logs-app` | View application logs |
+| `make logs-db` | View database logs |
+| `make build` | Build Docker images |
+| `make rebuild` | Rebuild images (no cache) |
+| `make migrate` | Run database migrations |
+| `make seed` | Seed the database |
+| `make shell-app` | Open shell in app container |
+| `make shell-db` | Open psql shell in database |
+| `make status` | Show status of all services |
+| `make health` | Check health of all services |
+| `make clean` | Remove containers and volumes |
+| `make backup-db` | Backup database |
+| `make restore-db` | Restore database from backup |
+
+### Database Management
+
+```bash
+# Run migrations
+make migrate
+
+# Check migration status
+make migrate-status
+
+# Seed database with test data
+make seed
+
+# Access database shell
+make shell-db
+
+# Backup database
+make backup-db
+
+# Restore from backup
+make restore-db BACKUP=backups/backup_file.sql
+```
+
+### Troubleshooting
+
+**Services won't start:**
+```bash
+# Check logs for errors
+make logs
+
+# Rebuild from scratch
+make rebuild
+make up
+```
+
+**Database connection issues:**
+```bash
+# Verify database is running
+make status
+
+# Check database health
+make health
+
+# View database logs
+make logs-db
+```
+
+**Reset everything:**
+
+> **⚠️ WARNING:** `make clean` is a destructive operation that will delete all containers, volumes, and data. It requires user confirmation before proceeding.
+
+```bash
+# Remove all containers and volumes (WARNING: deletes data, requires confirmation)
+make clean
+
+# Fresh start (non-destructive: stops, rebuilds, and restarts)
+make fresh
+```
+
+### Development vs Production
+
+| Aspect | Development | Production |
+|--------|-------------|------------|
+| Image size | Larger (dev deps) | Optimized (multi-stage) |
+| User | Root (convenience) | Non-root (security) |
+| Logs | Verbose | Configurable level |
+| Rebuild | Frequent | Cache-optimized |
+
+For production deployments, ensure:
+- Strong passwords in `.env`
+- SSL certificates in `nginx/ssl/`
+- Proper firewall rules
+- Regular database backups
+
+### Architecture
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Nginx     │────▶│    App      │────▶│  PostgreSQL │
+│   :80/:443  │     │    :3000    │     │    :5432    │
+└─────────────┘     └─────────────┘     └─────────────┘
+     ▲                    │
+     │              Health Check
+   Client           /api/health
+```
+### Required Environment Variables
+
+```env
+# Database (Vercel Postgres or external PostgreSQL with pooling)
+DATABASE_URL="postgres://..."          # Pooled connection URL
+DIRECT_DATABASE_URL="postgres://..."   # Direct connection for migrations
+
+# Application
+NEXT_PUBLIC_SOLANA_RPC_MAINNET="https://api.mainnet-beta.solana.com"
+JWT_SECRET="your-secure-random-secret-key-min-32-chars"
+NEXT_PUBLIC_APP_URL="https://your-domain.vercel.app"
+
+# Optional API Keys
+BIRDEYE_API_KEY="your-birdeye-api-key"
+```
+
+### Database Setup Options
+
+| Provider | Connection Pooling | Recommended For |
+|----------|-------------------|-----------------|
+| Vercel Postgres | Built-in | Vercel deployments |
+| Neon | Built-in | Serverless, branching |
+| Supabase | Via Supavisor | Full Postgres features |
+| PlanetScale | N/A (MySQL) | Not compatible |
+
+See [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md) for detailed setup instructions.
 
 ## 📚 Documentation
 
