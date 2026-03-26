@@ -8,7 +8,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
 interface HealthStatus {
   status: 'healthy' | 'unhealthy' | 'degraded';
@@ -34,35 +34,17 @@ const startTime = Date.now();
 // Version from package.json (fallback if env not set)
 const APP_VERSION = '1.0.0';
 
-// Singleton PrismaClient to avoid connection pool exhaustion
-let prismaClient: PrismaClient | null = null;
-
-function getPrismaClient(): PrismaClient | null {
-  if (!prismaClient) {
-    try {
-      prismaClient = new PrismaClient();
-    } catch {
-      return null;
-    }
-  }
-  return prismaClient;
-}
-
 /**
  * Check database connectivity
+ * Uses dynamic import to avoid requiring Prisma client at module load time
  */
 async function checkDatabase(): Promise<CheckResult> {
   const start = Date.now();
   
   try {
-    const prisma = getPrismaClient();
-    if (!prisma) {
-      return {
-        status: 'warn',
-        message: 'Prisma client not available',
-        latency: Date.now() - start,
-      };
-    }
+    // Dynamically import the shared prisma singleton to avoid module load failures
+    // when Prisma client isn't generated (e.g., in environments without DB setup)
+    const { prisma } = await import('@/lib/db');
     
     // Simple query to verify connection
     await prisma.$queryRaw`SELECT 1`;
