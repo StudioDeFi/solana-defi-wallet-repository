@@ -44,3 +44,6 @@
   "crons": []
 }
 
+{
+  "ignoreCommand": "echo Build only web app, ignore /mobile directory for this deployment"
+}

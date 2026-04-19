@@ -8,7 +8,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import type { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db';
 
 interface HealthStatus {
   status: 'healthy' | 'unhealthy' | 'degraded';
@@ -42,10 +42,6 @@ async function checkDatabase(): Promise<CheckResult> {
   const start = Date.now();
   
   try {
-    // Dynamically import the shared prisma singleton to avoid module load failures
-    // when Prisma client isn't generated (e.g., in environments without DB setup)
-    const { prisma } = await import('@/lib/db');
-    
     // Simple query to verify connection
     await prisma.$queryRaw`SELECT 1`;
     
