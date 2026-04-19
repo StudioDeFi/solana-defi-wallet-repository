@@ -36,6 +36,7 @@ const APP_VERSION = '1.0.0';
 
 /**
  * Check database connectivity
+ * Uses dynamic import to avoid requiring Prisma client at module load time
  */
 async function checkDatabase(): Promise<CheckResult> {
   const start = Date.now();
