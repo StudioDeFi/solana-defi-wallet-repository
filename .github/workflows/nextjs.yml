@@ -65,6 +65,11 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }} --legacy-peer-deps
       - name: Generate Prisma Client
-        run: npx prisma generate || echo "Prisma generate skipped"
+        run: |
+          if [ -f "${{ github.workspace }}/prisma/schema.prisma" ]; then
+            npx prisma generate
+          else
+            echo "Prisma schema not found; skipping Prisma client generation"
+          fi
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
